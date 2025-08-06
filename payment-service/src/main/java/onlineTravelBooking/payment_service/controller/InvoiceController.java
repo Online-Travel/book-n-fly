@@ -54,5 +54,9 @@ public class InvoiceController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/greet")
+    public String greet(){
+        return "hello";
+    }
 
 }

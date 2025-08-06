@@ -84,4 +84,9 @@ public class PaymentController {
         List<BookingPaymentResponseDTO> response=paymentService.getAllBookingWithPayments();
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/greet")
+    public String greet(){
+        return "Hello rajesh";
+    }
 }
