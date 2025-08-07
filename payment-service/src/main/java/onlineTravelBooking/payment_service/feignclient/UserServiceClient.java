@@ -7,11 +7,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
-@FeignClient(name="USER-SERVICE")
+@FeignClient(name="LOGIN-SERVICE")
 public interface UserServiceClient {
 
-    @GetMapping("/user/{user_id}")
-    UserDTO getUserById(@PathVariable("user_id") Long userId);
+    @GetMapping("/admin/user/{id}")
+    UserDTO getUserById(@PathVariable("id") Long userId);
 
     @GetMapping("/user")
     List<UserDTO> getAllUsers();

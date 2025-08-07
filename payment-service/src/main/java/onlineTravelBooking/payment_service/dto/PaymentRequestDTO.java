@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PaymentRequestDTO {
 
-    private Long userId;
     private Long bookingId;
     private double amount;
     private String paymentMethod;

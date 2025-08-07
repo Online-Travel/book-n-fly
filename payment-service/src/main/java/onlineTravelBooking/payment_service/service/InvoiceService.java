@@ -25,14 +25,12 @@ public class InvoiceService {
     @Autowired
     private UserServiceClient userServiceClient;
 
-    public String sendMail(Long invoiceId){
+    public String sendMail(Long invoiceId,String email){
         Optional<Invoice> invoiceOptional=invoiceRepository.findById(invoiceId);
         if(invoiceOptional.isEmpty()){
             throw new InvoiceNotFoundException("No Invoice found with id "+invoiceId);
         }
         Invoice invoice=invoiceOptional.get();
-        UserDTO user=userServiceClient.getUserById(invoice.getUserId());
-        String email=user.getEmail();
         return emailSenderService.sendMail(email,invoice);
     }
 

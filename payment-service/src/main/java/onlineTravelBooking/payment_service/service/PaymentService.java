@@ -31,9 +31,9 @@ public class PaymentService {
     @Autowired
     private BookingServiceClient bookingServiceClient;
 
-    public PaymentResponseDTO savePayment(PaymentRequestDTO paymentRequestDTO){
+    public PaymentResponseDTO savePayment(PaymentRequestDTO paymentRequestDTO,Long userId){
         Payment payment=new Payment();
-        payment.setUserId(paymentRequestDTO.getUserId());
+        payment.setUserId(userId);
         payment.setBookingId(paymentRequestDTO.getBookingId());
         payment.setAmount(paymentRequestDTO.getAmount());
         payment.setStatus("SUCCESS");
@@ -41,7 +41,7 @@ public class PaymentService {
 
         Invoice invoice=new Invoice();
         invoice.setBookingId(paymentRequestDTO.getBookingId());
-        invoice.setUserId(paymentRequestDTO.getUserId());
+        invoice.setUserId(userId);
         invoice.setTotalAmount(paymentRequestDTO.getAmount());
         invoice.setTimeStamp(LocalDateTime.now());
         invoice.setPayment(payment);
@@ -162,12 +162,12 @@ public class PaymentService {
     }
 
     public List<PaymentResponseDTO> getAllPaymentForUser(Long userId) {
-        try{
-            userServiceClient.getUserById(userId);
-        }
-        catch (FeignException.NotFound e){
-            throw new UserNotFoundException("user not found "+userId);
-        }
+//        try{
+//            userServiceClient.getUserById(userId);
+//        }
+//        catch (FeignException.NotFound e){
+//            throw new UserNotFoundException("user not found "+userId);
+//        }
         List<Payment> paymentList=paymentRepository.findByUserId(userId);
         if(paymentList.isEmpty()){
             throw new PaymentNotFoundException("payment not with id"+userId);
