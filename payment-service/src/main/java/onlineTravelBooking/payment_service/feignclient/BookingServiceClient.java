@@ -1,25 +1,27 @@
 package onlineTravelBooking.payment_service.feignclient;
 
 import onlineTravelBooking.payment_service.dto.BookingDTO;
+import onlineTravelBooking.payment_service.dto.UpdateBookingRequestDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @FeignClient(name="BOOKING-SERVICE")
 public interface BookingServiceClient {
 
-    @GetMapping("/booking/{booking_id}")
-    BookingDTO getBookingById(@PathVariable("booking_id") Long bookingId);
+    @PutMapping("/api/bookings/{bookingId}")
+    @PreAuthorize("hasRole('TRAVELER')")
+    public BookingDTO updateBooking(@RequestHeader("Authorization") String token,@PathVariable Long bookingId, @RequestBody UpdateBookingRequestDTO booking);
 
-    @GetMapping("/booking")
-    List<BookingDTO> getAllBooking();
+    @GetMapping("/api/bookings/{bookingId}")
+    @PreAuthorize("hasRole('TRAVELER') or hasRole('HOTEL_MANAGER') or hasRole('TRAVEL AGENT') or hasRole('ADMIN')")
+    public BookingDTO getBookingById(@RequestHeader("Authorization") String token,@PathVariable Long bookingId);
 
-    @PutMapping("/booking/{bookingId}/payment")
-    ResponseEntity<String> updateBookingWithPaymentId(@PathVariable("bookingId") Long bookingId, @RequestParam("paymentId") Long paymentId);
-
+    @GetMapping("/api/bookings")
+    @PreAuthorize("hasRole('TRAVELER') or hasRole('HOTEL_MANAGER') or hasRole('TRAVEL AGENT') or hasRole('ADMIN')")
+    public List<BookingDTO> getAllBookings(@RequestHeader("Authorization") String token);
 }
+

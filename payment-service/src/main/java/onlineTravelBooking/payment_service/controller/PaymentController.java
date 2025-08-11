@@ -3,6 +3,7 @@ package onlineTravelBooking.payment_service.controller;
 import com.netflix.discovery.converters.Auto;
 import onlineTravelBooking.payment_service.dto.*;
 import onlineTravelBooking.payment_service.entity.Payment;
+import onlineTravelBooking.payment_service.feignclient.UserServiceClient;
 import onlineTravelBooking.payment_service.service.PaymentService;
 import onlineTravelBooking.payment_service.utils.JwtUtil;
 import org.apache.catalina.User;
@@ -27,15 +28,17 @@ public class PaymentController {
     @Autowired
     private JwtUtil jwtUtil;
 
+    @Autowired
+    private UserServiceClient userServiceClient;
     //Saving the payment to the database by getting the userId from token
     //Need to communicate with the booking service to update the paymentId in the booking table
     @PostMapping("/create")
     @PreAuthorize("hasAnyRole('TRAVELER','TRAVEL AGENT')")
-    public ResponseEntity<PaymentResponseDTO> savePayment(@RequestBody PaymentRequestDTO paymentRequestDTO, Authentication authentication){
+    public ResponseEntity<PaymentResponseDTO> savePayment(@RequestHeader("Authorization") String token,@RequestBody PaymentRequestDTO paymentRequestDTO, Authentication authentication){
 
         UserDTO currentUser=(UserDTO) authentication.getPrincipal();
         Long userId=currentUser.getUserId();
-        PaymentResponseDTO response=paymentService.savePayment(paymentRequestDTO,userId);
+        PaymentResponseDTO response=paymentService.savePayment(token,paymentRequestDTO,userId);
         return new ResponseEntity<>(response, HttpStatus.OK);
 
     }
@@ -56,7 +59,7 @@ public class PaymentController {
     }
 
     //get the payment for a specific user by passing the userId in request
-    @GetMapping("/admin/getpayements")
+    @GetMapping("/getpayments/{user_id}")
     @PreAuthorize("hasAnyRole('ADMIN','TRAVELER','TRAVEL AGENT')")
     public ResponseEntity<?> getAllPaymentsByUserId(@PathVariable("user_id") Long userId){
         List<PaymentResponseDTO> response=paymentService.getAllPaymentsByUserId(userId);
@@ -96,21 +99,12 @@ public class PaymentController {
         return ResponseEntity.ok(responseDTO);
     }
 
-    //getting all the payment for the specific user
-    //Need to configure or communicate with the booking-service
-    @GetMapping("/booking/{booking_id}")
-    @PreAuthorize("hasAnyRole('TRAVELER','TRAVEL AGENT')")
-    public ResponseEntity<PaymentResponseDTO> getAllPaymentsByBookingForUser(@PathVariable("booking_id") Long bookingId){
-        PaymentResponseDTO responseDTO=paymentService.getAllPaymentsByBookingForUser(bookingId);
-        return ResponseEntity.ok(responseDTO);
-    }
-
     //getting all the users and their payment details for admin
     //Need to communicate with the user-service to get all the user
     @GetMapping("/admin/userwithpayments")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<UserPaymentResponseDTO>> getAllUserWithPayments(){
-        List<UserPaymentResponseDTO> response=paymentService.getAllUserWithPayments();
+    public ResponseEntity<List<UserPaymentResponseDTO>> getAllUserWithPayments(@RequestHeader("Authorization") String token){
+        List<UserPaymentResponseDTO> response=paymentService.getAllUserWithPayments(token);
         return ResponseEntity.ok(response);
     }
 
@@ -118,13 +112,9 @@ public class PaymentController {
     //Need to communicate with the booking-service to get all the booking
     @GetMapping("/admin/bookingwithpayments")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<BookingPaymentResponseDTO>> getAllBookingWithPayments(){
-        List<BookingPaymentResponseDTO> response=paymentService.getAllBookingWithPayments();
+    public ResponseEntity<List<BookingPaymentResponseDTO>> getAllBookingWithPayments(@RequestHeader("Authorization") String token){
+        List<BookingPaymentResponseDTO> response=paymentService.getAllBookingWithPayments(token);
         return ResponseEntity.ok(response);
     }
 
-//    @GetMapping("/greet")
-//    public String greet(){
-//        return "Hello rajesh";
-//    }
 }

@@ -13,7 +13,7 @@ public class BookingDTO {
     private Long userId;
     private String Type;
     private String status;
-    private Long payment_id;
+    private Long paymentId;
 
 
 }

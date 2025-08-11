@@ -1,0 +1,20 @@
+package OnlineTravelBooking.booking_service.service;
+
+import OnlineTravelBooking.booking_service.dto.BookingRequestDTO;
+import OnlineTravelBooking.booking_service.dto.UpdateBookingRequestDTO;
+import OnlineTravelBooking.booking_service.model.Booking;
+
+import java.util.List;
+import java.util.Optional;
+
+public interface BookingService {
+    List<Booking> getAllBookings();
+
+    Optional<Booking> getBookingById(Long bookingId);
+
+    Booking addBooking(BookingRequestDTO booking);
+
+    Booking updateBooking(Long bookingId, UpdateBookingRequestDTO booking);
+
+    void deleteBooking(Long bookingId);
+}

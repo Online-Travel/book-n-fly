@@ -31,7 +31,12 @@ public class PaymentService {
     @Autowired
     private BookingServiceClient bookingServiceClient;
 
-    public PaymentResponseDTO savePayment(PaymentRequestDTO paymentRequestDTO,Long userId){
+    public PaymentResponseDTO savePayment(String token,PaymentRequestDTO paymentRequestDTO,Long userId){
+        Payment exist=paymentRepository.findByBookingIdAndUserId(paymentRequestDTO.getBookingId(),userId);
+        System.out.println("Save payment");
+        if(exist!=null){
+            throw new PaymentNotFoundException("Booking Id and userId is already found");
+        }
         Payment payment=new Payment();
         payment.setUserId(userId);
         payment.setBookingId(paymentRequestDTO.getBookingId());
@@ -50,12 +55,16 @@ public class PaymentService {
 
         Payment saved=paymentRepository.save(payment);
 
-        try{
-            bookingServiceClient.updateBookingWithPaymentId(saved.getBookingId(), saved.getPaymentId());
-        }
-        catch (FeignException e){
-            throw new BookingNotFoundException("Payment saved, but failed to update booking with paymentId");
-        }
+        BookingDTO booking=bookingServiceClient.getBookingById(token,saved.getBookingId());
+
+        booking.setStatus(saved.getStatus());
+        booking.setPaymentId(saved.getPaymentId());
+
+        UpdateBookingRequestDTO updateBookingRequestDTO=new UpdateBookingRequestDTO();
+        updateBookingRequestDTO.setStatus(payment.getStatus());
+        updateBookingRequestDTO.setPaymentId(payment.getPaymentId());
+
+        bookingServiceClient.updateBooking(token,booking.getBookingId(), updateBookingRequestDTO);
 
         PaymentResponseDTO response=new PaymentResponseDTO();
         response.setPaymentId(saved.getPaymentId());
@@ -190,58 +199,37 @@ public class PaymentService {
         );
     }
 
-    public PaymentResponseDTO getAllPaymentsByBookingForUser(Long bookingId) {
-        try{
-            bookingServiceClient.getBookingById(bookingId);
-        }
-        catch (FeignException.NotFound e){
-            throw new BookingNotFoundException("booking not found with "+bookingId);
-        }
-        Payment payment=paymentRepository.findByBookingId(bookingId);
-        if(payment==null){
-            throw  new PaymentNotFoundException("Payment not found with bookingId "+bookingId);
-        }
 
-        PaymentResponseDTO dto=new PaymentResponseDTO();
-        dto.setPaymentId(payment.getPaymentId());
-        dto.setUserId(payment.getUserId());
-        dto.setBookingId(payment.getBookingId());
-        dto.setAmount(payment.getAmount());
-        dto.setStatus(payment.getStatus());
-        dto.setPaymentMethod(payment.getPaymentMethod());
-        return dto;
+    public List<UserPaymentResponseDTO> getAllUserWithPayments(String token) {
 
-    }
+        List<UserDTO> users=userServiceClient.getAllUsers(token);
 
-    public List<UserPaymentResponseDTO> getAllUserWithPayments() {
-        List<UserDTO> users=userServiceClient.getAllUsers();
+        System.out.println(users);
 
-        return users.stream().map(user -> {
-            List<Payment> payments = paymentRepository.findByUserId(user.getUserId());
-            List<PaymentResponseDTO> paymentDTOs = payments.stream()
+        return users.stream().map(user ->{
+            List<Payment> payments=paymentRepository.findByUserId(user.getUserId());
+
+            List<PaymentResponseDTO>  paymentDTO=payments.stream()
                     .map(this::mapToDTO)
-                    .collect(Collectors.toList());
+                    .collect(Collectors.toUnmodifiableList());
 
-            UserPaymentResponseDTO response = new UserPaymentResponseDTO();
-            response.setUser(user);
-            response.setPayments(paymentDTOs);
-            return response;
-        }).collect(Collectors.toList());
+            return new UserPaymentResponseDTO(user,paymentDTO);
+        }).collect(Collectors.toUnmodifiableList());
+
     }
 
-    public List<BookingPaymentResponseDTO> getAllBookingWithPayments() {
-        List<BookingDTO> booking=bookingServiceClient.getAllBooking();
+    public List<BookingPaymentResponseDTO> getAllBookingWithPayments(String token) {
+        List<BookingDTO> booking=bookingServiceClient.getAllBookings(token);
 
-        List<BookingPaymentResponseDTO> response=new ArrayList<>();
+        return booking.stream().map(book ->{
+            List<Payment> payments=paymentRepository.findByUserId(book.getUserId());
 
-        for(BookingDTO book:booking){
-            Payment payment=paymentRepository.findByBookingId(book.getBookingId());
-            PaymentResponseDTO paymentResponseDTO=mapToDTO(payment);
-            BookingPaymentResponseDTO bookingPaymentResponseDTO=new BookingPaymentResponseDTO();
-            bookingPaymentResponseDTO.setBookingDTO(book);
-            bookingPaymentResponseDTO.setPaymentResponseDTO(paymentResponseDTO);
-            response.add(bookingPaymentResponseDTO);
-        }
-        return  response;
+            List<PaymentResponseDTO>  paymentDTO=payments.stream()
+                    .map(this::mapToDTO)
+                    .collect(Collectors.toUnmodifiableList());
+
+            return new BookingPaymentResponseDTO(book,paymentDTO);
+        }).collect(Collectors.toUnmodifiableList());
+
     }
 }

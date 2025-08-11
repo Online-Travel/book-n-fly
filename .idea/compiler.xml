@@ -10,7 +10,7 @@
         <module name="eureka-server" />
         <module name="api-gateway-service" />
       </profile>
-      <profile name="Annotation profile for payment-service" enabled="true">
+      <profile name="Annotation profile for booking-service" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
@@ -19,15 +19,19 @@
         </processorPath>
         <module name="login-service" />
         <module name="payment-service" />
+        <module name="review-service" />
+        <module name="booking-service" />
       </profile>
     </annotationProcessing>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="api-gateway-service" options="-parameters" />
+      <module name="booking-service" options="-parameters" />
       <module name="eureka-server" options="-parameters" />
       <module name="login-service" options="-parameters" />
       <module name="payment-service" options="-parameters" />
+      <module name="review-service" options="-parameters" />
     </option>
   </component>
 </project>

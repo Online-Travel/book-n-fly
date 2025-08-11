@@ -23,15 +23,17 @@ public class SecurityConfig {
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         // Public endpoints (health checks, discovery)
-                        .requestMatchers("/actuator/**", "/eureka/**").permitAll()
+                        .requestMatchers("/actuator/**", "/health/**","/eureka/**").permitAll()
 
                         // Payment endpoints with role-based access
+                        .requestMatchers("/payments/greet").hasRole("ADMIN")
                         .requestMatchers("/payments/create").hasAnyRole("TRAVELER","TRAVEL AGENT")
                         .requestMatchers("/payments/user/**").hasAnyRole("TRAVELER","TRAVEL AGENT")
                         .requestMatchers("/payments/booking/**").hasAnyRole("TRAVELER","TRAVEL AGENT")
                         .requestMatchers("/payments/update/**").hasAnyRole("TRAVELER", "ADMIN","TRAVEL AGENT")
                         .requestMatchers("/payments/admin/**").hasRole("ADMIN")
                         .requestMatchers("/payments/{payment_id}").hasAnyRole("TRAVELER", "ADMIN","TRAVEL AGENT")
+                        .requestMatchers("/payments/getpayments/**").hasAnyRole("TRAVELER", "ADMIN","TRAVEL AGENT")
 
                         // Invoice endpoints with role-based access
                         .requestMatchers("/invoice/mail/**").hasAnyRole("TRAVELER","TRAVEL AGENT")
