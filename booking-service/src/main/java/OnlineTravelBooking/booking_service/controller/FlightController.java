@@ -52,4 +52,17 @@ public class FlightController {
         flightService.deleteFlight(flightId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<Flight>> searchFlights(
+            @RequestParam(required = false) String airline,
+            @RequestParam(required = false) String departure,
+            @RequestParam(required = false) String arrival,
+            @RequestParam(required = false) Double minPrice,
+            @RequestParam(required = false) Double maxPrice,
+            @RequestParam(required = false) Boolean availability
+    ) {
+        List<Flight> flights = flightService.searchFlights(airline, departure, arrival, minPrice, maxPrice, availability);
+        return  ResponseEntity.ok(flights);
+    }
 }

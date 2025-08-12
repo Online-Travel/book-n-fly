@@ -55,8 +55,13 @@ public class HotelController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<Hotel>> searchHotelsByLocation(@RequestParam String location) {
-        List<Hotel> hotels = hotelService.getHotelsByLocation(location);
+    public ResponseEntity<List<Hotel>> searchHotels(
+            @RequestParam(required = false) String location,
+            @RequestParam(required = false) Double minRating,
+            @RequestParam(required = false) Double maxPrice,
+            @RequestParam(required = false) Integer minRooms
+    ) {
+        List<Hotel> hotels = hotelService.searchHotels(location, minRating, maxPrice, minRooms);
         return ResponseEntity.ok(hotels);
     }
 }

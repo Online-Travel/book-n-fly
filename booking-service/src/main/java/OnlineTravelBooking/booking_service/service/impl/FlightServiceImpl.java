@@ -44,4 +44,9 @@ public class FlightServiceImpl implements FlightService {
 
         flightRepository.deleteById(flightId);
     }
+
+    @Override
+    public List<Flight> searchFlights(String airline, String departure, String arrival, Double minPrice, Double maxPrice, Boolean availability) {
+        return flightRepository.searchFlights(airline, departure, arrival, minPrice, maxPrice, availability);
+    }
 }

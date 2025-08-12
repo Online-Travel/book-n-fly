@@ -16,4 +16,6 @@ public interface FlightService {
     Flight updateFlight(Long flightId, Flight flight);
 
     void deleteFlight(Long flightId);
+
+    List<Flight> searchFlights(String airline, String departure, String arrival, Double minPrice, Double maxPrice, Boolean availability);
 }
