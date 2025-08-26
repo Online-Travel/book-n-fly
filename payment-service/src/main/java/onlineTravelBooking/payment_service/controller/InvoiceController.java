@@ -24,7 +24,7 @@ public class InvoiceController {
 
     //getting the mail from the token and sending the mail
     @PostMapping("/mail/{invoice_id}")
-    @PreAuthorize("hasAnyRole('TRAVELER','TRAVEL AGENT')")
+    @PreAuthorize("hasAnyRole('TRAVELER','TRAVEL_AGENT')")
     public ResponseEntity<String> sendMail(@PathVariable("invoice_id") Long invoiceId, Authentication authentication){
         UserDTO currentUser = (UserDTO) authentication.getPrincipal();
         String email = currentUser.getEmail();
@@ -71,9 +71,5 @@ public class InvoiceController {
         return ResponseEntity.ok(response);
     }
 
-//    @GetMapping("/greet")
-//    public String greet(){
-//        return "hello";
-//    }
 
 }

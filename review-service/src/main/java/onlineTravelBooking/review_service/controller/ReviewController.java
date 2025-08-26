@@ -33,7 +33,7 @@ public class ReviewController {
     public ReviewResponseDTO addReview(@RequestHeader("Authorization") String token,
                                        @Valid @RequestBody ReviewRequestDTO dto) {
         try{
-            Long userId = jwtUtil.extractUserId(token);
+            Long userId = jwtUtil.extractUserId(token.substring(7).trim());
             System.out.println("Extracted userId in cont"+userId);
             return reviewService.addReview(userId, dto);
         }

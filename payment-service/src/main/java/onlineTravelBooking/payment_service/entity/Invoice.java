@@ -21,6 +21,6 @@ public class Invoice {
     private double totalAmount;
     private LocalDateTime timeStamp;
 
-    @OneToOne(mappedBy = "invoice")
+    @OneToOne(mappedBy = "invoice", cascade = CascadeType.ALL)
     private Payment payment;
 }

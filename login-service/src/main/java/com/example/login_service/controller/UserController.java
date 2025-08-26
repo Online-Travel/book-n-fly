@@ -22,6 +22,7 @@ public class UserController {
     @PostMapping("/adduser")
     public ResponseEntity<String> addUsers(@RequestBody User user){
         return userService.register(user);
+        empList.stream().filter(name -> name.substring(0,1).equals("a" || "b" || "c")).Collectors.collect
     }
 
     // Login existing user and return JWT token

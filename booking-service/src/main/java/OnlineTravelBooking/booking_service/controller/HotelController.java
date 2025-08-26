@@ -19,7 +19,6 @@ public class HotelController {
     private HotelService hotelService;
 
     @GetMapping("/{hotelId}")
-//    @PreAuthorize("hasRole('TRAVELER') or hasRole('HOTEL_MANAGER') or hasRole('TRAVEL_AGENT') or hasRole('ADMIN')")
     public ResponseEntity<Hotel> getHotelById(@PathVariable Long hotelId) {
         Optional<Hotel> hotel = hotelService.getHotelById(hotelId);
         return hotel.map(ResponseEntity::ok)
@@ -27,7 +26,6 @@ public class HotelController {
     }
 
     @GetMapping
-//    @PreAuthorize("hasRole('TRAVELER') or hasRole('HOTEL_MANAGER') or hasRole('TRAVEL_AGENT') or hasRole('ADMIN')")
     public ResponseEntity<List<Hotel>> getAllHotels() {
         List<Hotel> hotels = hotelService.getAllHotels();
         return ResponseEntity.ok(hotels);
@@ -49,19 +47,19 @@ public class HotelController {
 
     @DeleteMapping("/{hotelId}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> deleteHotel(@PathVariable Long hotelId) {
+    public ResponseEntity<String> deleteHotel(@PathVariable Long hotelId) {
         hotelService.deleteHotel(hotelId);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseEntity.status(HttpStatus.OK).body("Hotel Deleted");
     }
 
     @GetMapping("/search")
     public ResponseEntity<List<Hotel>> searchHotels(
-            @RequestParam(required = false) String location,
+            @RequestParam(required = false) String destination,
             @RequestParam(required = false) Double minRating,
             @RequestParam(required = false) Double maxPrice,
             @RequestParam(required = false) Integer minRooms
     ) {
-        List<Hotel> hotels = hotelService.searchHotels(location, minRating, maxPrice, minRooms);
+        List<Hotel> hotels = hotelService.searchHotels(destination, minRating, maxPrice, minRooms);
         return ResponseEntity.ok(hotels);
     }
 }

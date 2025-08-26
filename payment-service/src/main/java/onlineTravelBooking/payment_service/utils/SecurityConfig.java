@@ -27,16 +27,16 @@ public class SecurityConfig {
 
                         // Payment endpoints with role-based access
                         .requestMatchers("/payments/greet").hasRole("ADMIN")
-                        .requestMatchers("/payments/create").hasAnyRole("TRAVELER","TRAVEL AGENT")
-                        .requestMatchers("/payments/user/**").hasAnyRole("TRAVELER","TRAVEL AGENT")
-                        .requestMatchers("/payments/booking/**").hasAnyRole("TRAVELER","TRAVEL AGENT")
-                        .requestMatchers("/payments/update/**").hasAnyRole("TRAVELER", "ADMIN","TRAVEL AGENT")
+                        .requestMatchers("/payments/create/**").hasRole("TRAVELER")
+                        .requestMatchers("/payments/user/**").hasAnyRole("TRAVELER","TRAVEL_AGENT")
+                        .requestMatchers("/payments/booking/**").hasAnyRole("TRAVELER","TRAVEL_AGENT")
+                        .requestMatchers("/payments/update/**").hasAnyRole("TRAVELER", "ADMIN","TRAVEL_AGENT")
                         .requestMatchers("/payments/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/payments/{payment_id}").hasAnyRole("TRAVELER", "ADMIN","TRAVEL AGENT")
-                        .requestMatchers("/payments/getpayments/**").hasAnyRole("TRAVELER", "ADMIN","TRAVEL AGENT")
+                        .requestMatchers("/payments/{payment_id}").hasAnyRole("TRAVELER", "ADMIN","TRAVEL_AGENT")
+                        .requestMatchers("/payments/getpayments/**").hasAnyRole("TRAVELER", "ADMIN","TRAVEL_AGENT")
 
                         // Invoice endpoints with role-based access
-                        .requestMatchers("/invoice/mail/**").hasAnyRole("TRAVELER","TRAVEL AGENT")
+                        .requestMatchers("/invoice/mail/**").hasAnyRole("TRAVELER","TRAVEL_AGENT")
                         .requestMatchers("/invoice/admin/**").hasRole("ADMIN")
 
                         // All other requests need authentication

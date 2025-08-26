@@ -5,6 +5,8 @@ import OnlineTravelBooking.booking_service.dto.UpdateBookingRequestDTO;
 import OnlineTravelBooking.booking_service.model.Booking;
 import OnlineTravelBooking.booking_service.repository.BookingRepository;
 import OnlineTravelBooking.booking_service.service.BookingService;
+import OnlineTravelBooking.booking_service.utils.JwtUtil;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,9 @@ public class BookingServiceImpl implements BookingService {
 
     @Autowired
     private BookingRepository bookingRepository;
+    
+    @Autowired
+    private JwtUtil jwtUtil;
 
     @Override
     public List<Booking> getAllBookings() {
@@ -30,12 +35,12 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public Booking addBooking(BookingRequestDTO booking) {
+    public Booking addBooking(String token, BookingRequestDTO booking) {
 
         Booking book=new Booking();
-        book.setUserId(booking.getUserId());
+        book.setUserId(jwtUtil.extractUserId(token));
         book.setType(booking.getType());
-        book.setStatus(booking.getStatus());
+        book.setStatus("Pending");
 
         return bookingRepository.save(book);
     }

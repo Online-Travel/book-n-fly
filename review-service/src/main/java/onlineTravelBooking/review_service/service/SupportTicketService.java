@@ -24,5 +24,4 @@ public interface SupportTicketService {
 
     SupportTicketResponseDTO closeTicket(Long ticketId);
 
-    List<SupportTicketResponseDTO> getAssignedTickets(Long agentId);
 }

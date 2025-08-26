@@ -20,14 +20,6 @@ public class FeignAuthInterceptor implements RequestInterceptor {
                 String token = (String) credentials;
                 template.header("Authorization", "Bearer " + token);
             }
-            else {
-                // fallback or log warning if token isn't found
-                // Optionally, handle JwtAuthenticationToken case like:
-                // if (authentication instanceof JwtAuthenticationToken jwtAuth) {
-                //    String token = jwtAuth.getToken().getTokenValue();
-                //    template.header("Authorization", "Bearer " + token);
-                // }
-            }
         }
     }
 }

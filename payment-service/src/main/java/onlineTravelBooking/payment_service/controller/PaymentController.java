@@ -1,21 +1,32 @@
 package onlineTravelBooking.payment_service.controller;
 
-import com.netflix.discovery.converters.Auto;
-import onlineTravelBooking.payment_service.dto.*;
-import onlineTravelBooking.payment_service.entity.Payment;
-import onlineTravelBooking.payment_service.feignclient.UserServiceClient;
-import onlineTravelBooking.payment_service.service.PaymentService;
-import onlineTravelBooking.payment_service.utils.JwtUtil;
-import org.apache.catalina.User;
+import java.util.List;
+
 //import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.util.List;
+import onlineTravelBooking.payment_service.dto.BookingPaymentResponseDTO;
+import onlineTravelBooking.payment_service.dto.PaymentRequestDTO;
+import onlineTravelBooking.payment_service.dto.PaymentResponseDTO;
+import onlineTravelBooking.payment_service.dto.UpdatePaymentRequestDTO;
+import onlineTravelBooking.payment_service.dto.UserDTO;
+import onlineTravelBooking.payment_service.dto.UserPaymentResponseDTO;
+import onlineTravelBooking.payment_service.service.PaymentService;
+import onlineTravelBooking.payment_service.utils.JwtUtil;
 
 @RestController
 @RequestMapping("/payments")
@@ -24,16 +35,14 @@ public class PaymentController {
 
     @Autowired
     private PaymentService paymentService;
-
+    
     @Autowired
     private JwtUtil jwtUtil;
 
-    @Autowired
-    private UserServiceClient userServiceClient;
     //Saving the payment to the database by getting the userId from token
     //Need to communicate with the booking service to update the paymentId in the booking table
     @PostMapping("/create")
-    @PreAuthorize("hasAnyRole('TRAVELER','TRAVEL AGENT')")
+    @PreAuthorize("hasRole('TRAVELER')")
     public ResponseEntity<PaymentResponseDTO> savePayment(@RequestHeader("Authorization") String token,@RequestBody PaymentRequestDTO paymentRequestDTO, Authentication authentication){
 
         UserDTO currentUser=(UserDTO) authentication.getPrincipal();
@@ -43,9 +52,10 @@ public class PaymentController {
 
     }
 
+
     //updating the payment status by paymentId
     @PutMapping("/update/{payment_id}")
-    @PreAuthorize("hasAnyRole('TRAVELER','TRAVEL AGENT,'ADMIN')")
+    @PreAuthorize("hasAnyRole('TRAVELER','TRAVEL_AGENT','ADMIN')")
     public ResponseEntity<?> updatePayment(@PathVariable("payment_id") Long paymentId,@RequestBody UpdatePaymentRequestDTO updatePaymentRequestDTO){
         return new ResponseEntity<>(paymentService.updatePayment(paymentId, updatePaymentRequestDTO),HttpStatus.OK);
     }
@@ -60,7 +70,7 @@ public class PaymentController {
 
     //get the payment for a specific user by passing the userId in request
     @GetMapping("/getpayments/{user_id}")
-    @PreAuthorize("hasAnyRole('ADMIN','TRAVELER','TRAVEL AGENT')")
+    @PreAuthorize("hasAnyRole('ADMIN','TRAVELER','TRAVEL_AGENT')")
     public ResponseEntity<?> getAllPaymentsByUserId(@PathVariable("user_id") Long userId){
         List<PaymentResponseDTO> response=paymentService.getAllPaymentsByUserId(userId);
         return ResponseEntity.ok(response);
@@ -91,7 +101,7 @@ public class PaymentController {
 
     //getting all the payments for the user using token
     @GetMapping("/user")
-    @PreAuthorize("hasAnyRole('TRAVELER','TRAVEL AGENT')")
+    @PreAuthorize("hasAnyRole('TRAVELER','TRAVEL_AGENT')")
     public ResponseEntity<List<PaymentResponseDTO>> getAllPaymentForUser(Authentication authentication){
         UserDTO currentUser=(UserDTO) authentication.getPrincipal();
         Long userId=currentUser.getUserId();

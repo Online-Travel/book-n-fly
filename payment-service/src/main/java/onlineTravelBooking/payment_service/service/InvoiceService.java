@@ -84,7 +84,8 @@ public class InvoiceService {
         if(saved.isEmpty()){
             throw new InvoiceNotFoundException("invoiceId is not found");
         }
-        invoiceRepository.deleteById(invoiceId);
+        Invoice in = saved.get();
+        invoiceRepository.deleteById(in.getBookingId());
         return "deleted successfully";
     }
 

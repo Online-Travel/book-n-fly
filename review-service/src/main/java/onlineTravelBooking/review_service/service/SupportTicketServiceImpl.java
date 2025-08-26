@@ -95,10 +95,6 @@ public class SupportTicketServiceImpl implements SupportTicketService {
         return toDTO(repo.save(ticket));
     }
 
-    @Override
-    public List<SupportTicketResponseDTO> getAssignedTickets(Long agentId) {
-        return repo.findByAssignedAgentId(agentId).stream().map(this::toDTO).collect(Collectors.toList());
-    }
 
     private SupportTicketResponseDTO toDTO(SupportTicket t) {
         SupportTicketResponseDTO dto = new SupportTicketResponseDTO();

@@ -28,7 +28,7 @@ public class SupportTicketController {
     @PreAuthorize("hasRole('TRAVELER')")
     public SupportTicketResponseDTO createTicket(@RequestHeader("Authorization") String token,
                                                  @Valid @RequestBody SupportTicketRequestDTO dto) {
-        Long userId = jwtUtil.extractUserId(token);
+        Long userId = jwtUtil.extractUserId(token.substring(7).trim());
         dto.setUserId(userId);  // Set userId before saving
         return ticketService.createTicket(dto);
     }
@@ -37,7 +37,7 @@ public class SupportTicketController {
     @GetMapping("/my")
     @PreAuthorize("hasRole('TRAVELER')")
     public List<SupportTicketResponseDTO> getMyTickets(@RequestHeader("Authorization") String token) {
-        Long userId = jwtUtil.extractUserId(token);
+        Long userId = jwtUtil.extractUserId(token.substring(7).trim());
         return ticketService.getTicketsByUser(userId);
     }
 
@@ -92,16 +92,9 @@ public class SupportTicketController {
 
     // AGENT closes ticket
     @PutMapping("/{ticketId}/close")
-    @PreAuthorize("hasRole('TRAVEL AGENT')")
+    @PreAuthorize("hasRole('TRAVEL_AGENT')")
     public SupportTicketResponseDTO closeTicket(@PathVariable Long ticketId) {
         return ticketService.closeTicket(ticketId);
     }
 
-    // AGENT views assigned tickets
-    @GetMapping("/assigned")
-    @PreAuthorize("hasRole('TRAVEL AGENT')")
-    public List<SupportTicketResponseDTO> getAssignedTickets(@RequestHeader("Authorization") String token) {
-        Long agentId = jwtUtil.extractUserId(token);
-        return ticketService.getAssignedTickets(agentId);
-    }
 }

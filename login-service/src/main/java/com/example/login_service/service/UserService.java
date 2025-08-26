@@ -77,7 +77,7 @@ public class UserService {
         Optional<User> optUser = userRepo.findById(id);
         if (optUser.isPresent()) {
             User user = optUser.get();
-            user.setRole(newRole.toUpperCase());
+            user.setRole(newRole.toUpperCase().replace(" ", "_"));
             userRepo.save(user);
             return ResponseEntity.ok("Role updated successfully");
         }
@@ -87,8 +87,6 @@ public class UserService {
     // Authenticate user and return JWT token
     public ResponseEntity<AuthResponse> login(LoginRequest loginRequest) {
         User user = userRepo.findByEmail(loginRequest.getEmail());
-        //System.out.println(user);
-        //System.out.println(passwordEncoder.matches(loginRequest.getPassword(), user.getPassword()));
         if (user == null || !passwordEncoder.matches(loginRequest.getPassword(),user.getPassword())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }

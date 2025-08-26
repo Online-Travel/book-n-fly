@@ -9,8 +9,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class HotelDTO {
 
-    private Long id;
+    private Long hotelId;
     private String name;
-    private Double price;
     private Double rating;
+    private String location;
+    private Integer roomsAvailable;
+    private Double pricePerNight;
 }

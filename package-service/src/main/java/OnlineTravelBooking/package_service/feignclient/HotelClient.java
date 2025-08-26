@@ -13,7 +13,7 @@ public interface HotelClient {
 
     @GetMapping("/api/hotels/search")
     List<HotelDTO> searchHotels(
-            @RequestParam(required = false) String location,
+            @RequestParam(required = false) String destination,
             @RequestParam(required = false) Double minRating,
             @RequestParam(required = false) Double maxPrice,
             @RequestParam(required = false) Integer minRooms

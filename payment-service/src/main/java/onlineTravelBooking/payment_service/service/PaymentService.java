@@ -10,6 +10,8 @@ import onlineTravelBooking.payment_service.exception.UserNotFoundException;
 import onlineTravelBooking.payment_service.feignclient.BookingServiceClient;
 import onlineTravelBooking.payment_service.feignclient.UserServiceClient;
 import onlineTravelBooking.payment_service.repository.PaymentRepository;
+import onlineTravelBooking.payment_service.utils.JwtUtil;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +32,9 @@ public class PaymentService {
 
     @Autowired
     private BookingServiceClient bookingServiceClient;
+    
+    @Autowired
+    private JwtUtil jwtUtil;
 
     public PaymentResponseDTO savePayment(String token,PaymentRequestDTO paymentRequestDTO,Long userId){
         Payment exist=paymentRepository.findByBookingIdAndUserId(paymentRequestDTO.getBookingId(),userId);
@@ -76,6 +81,7 @@ public class PaymentService {
 
         return response;
     }
+
 
     public PaymentResponseDTO updatePayment(Long paymentId, UpdatePaymentRequestDTO updatePaymentRequestDTO){
         Payment payment=paymentRepository.findById(paymentId)
@@ -171,12 +177,6 @@ public class PaymentService {
     }
 
     public List<PaymentResponseDTO> getAllPaymentForUser(Long userId) {
-//        try{
-//            userServiceClient.getUserById(userId);
-//        }
-//        catch (FeignException.NotFound e){
-//            throw new UserNotFoundException("user not found "+userId);
-//        }
         List<Payment> paymentList=paymentRepository.findByUserId(userId);
         if(paymentList.isEmpty()){
             throw new PaymentNotFoundException("payment not with id"+userId);

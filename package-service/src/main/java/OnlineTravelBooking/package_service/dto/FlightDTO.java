@@ -9,8 +9,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class FlightDTO {
 
-    private Long id;
-    private String name;
+	private Long flightId;
+
+    private String airline;
+
+    private String departure;
+
+    private String arrival;
+
     private Double price;
-    private Double rating;
+
+    private Boolean availability;
 }

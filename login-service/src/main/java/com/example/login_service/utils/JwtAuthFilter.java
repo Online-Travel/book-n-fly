@@ -36,7 +36,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             if (email != null && jwtUtil.validateToken(token)) {
                 User user = userRepo.findByEmail(email);
                 String role = jwtUtil.extractRole(token);
-                Long userId=jwtUtil.extractUserId(token);
 
                 SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + role);
 

@@ -39,7 +39,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/api/flights/**").hasRole("ADMIN")
 
                         // Booking endpoints with role-based access
-                        .requestMatchers(HttpMethod.GET, "/api/bookings/**").hasAnyRole("TRAVELER", "HOTEL_MANAGER", "TRAVEL AGENT", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/bookings/**").hasAnyRole("TRAVELER", "HOTEL_MANAGER", "TRAVEL_AGENT", "ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/bookings/**").hasRole("TRAVELER")
                         .requestMatchers(HttpMethod.PUT, "/api/bookings/**").hasRole("TRAVELER")
                         .requestMatchers(HttpMethod.DELETE, "/api/bookings/**").hasRole("TRAVELER")

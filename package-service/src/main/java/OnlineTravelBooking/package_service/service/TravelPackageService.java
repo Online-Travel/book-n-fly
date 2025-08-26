@@ -11,7 +11,7 @@ public interface TravelPackageService {
 
     List<TravelPackage> getActivePackages();
 
-    TravelPackage savePackage(TravelPackage travelPackage);
+    TravelPackage savePackage(String token, TravelPackage travelPackage);
 
     Optional<TravelPackage> getPackageById(Long id);
 

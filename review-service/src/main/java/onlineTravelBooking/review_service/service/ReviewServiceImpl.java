@@ -4,6 +4,8 @@ import onlineTravelBooking.review_service.dto.ReviewRequestDTO;
 import onlineTravelBooking.review_service.dto.ReviewResponseDTO;
 import onlineTravelBooking.review_service.entity.Review;
 import onlineTravelBooking.review_service.repository.ReviewRepository;
+import onlineTravelBooking.review_service.utils.JwtUtil;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,9 @@ import java.util.stream.Collectors;
 
 @Service
 public class ReviewServiceImpl implements ReviewService{
+	
+	@Autowired
+	private JwtUtil jwtUtil;
 
     private final ReviewRepository repo;
 

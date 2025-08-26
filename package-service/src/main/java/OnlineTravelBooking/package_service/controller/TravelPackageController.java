@@ -21,10 +21,10 @@ public class TravelPackageController {
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('TRAVEL AGENT')")
-    public TravelPackage create(@RequestBody TravelPackage pkg) {
-
-        return service.savePackage(pkg);
+    @PreAuthorize("hasRole('TRAVEL_AGENT')")
+    public TravelPackage create(@RequestHeader("Authorization") String token, @RequestBody TravelPackage pkg) {
+    		
+        return service.savePackage(token.substring(7).trim(), pkg);
     }
 
     @GetMapping
@@ -45,13 +45,13 @@ public class TravelPackageController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('TRAVEL AGENT','ADMIN')")
+    @PreAuthorize("hasAnyRole('TRAVEL_AGENT','ADMIN')")
     public TravelPackage update(@PathVariable Long id, @RequestBody TravelPackage pkg) {
         return service.updatePackage(id, pkg);
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyRole('TRAVEL AGENT','ADMIN')")
+    @PreAuthorize("hasAnyRole('TRAVEL_AGENT','ADMIN')")
     public void delete(@PathVariable Long id) {
 
         service.deletePackage(id);

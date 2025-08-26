@@ -43,7 +43,7 @@ public class ItineraryController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAnyRole('TRAVEL AGENT','TRAVELER')")
+    @PreAuthorize("hasAnyRole('TRAVEL_AGENT','TRAVELER')")
     public Itinerary create(@RequestHeader("Authorization") String authHeader, @RequestBody Itinerary itinerary) {
         String token = authHeader.startsWith("Bearer ") ? authHeader.substring(7).trim() : authHeader;
         Long userId = jwtUtil.extractUserId(token);
@@ -53,19 +53,19 @@ public class ItineraryController {
 
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('TRAVEL AGENT','ADMIN','TRAVELER')")
+    @PreAuthorize("hasAnyRole('TRAVEL_AGENT','ADMIN','TRAVELER')")
     public Itinerary update(@PathVariable Long id, @RequestBody Itinerary itinerary) {
         return service.update(id, itinerary);
     }
 
     @PatchMapping("/{id}/status")
-    @PreAuthorize("hasAnyRole('TRAVEL AGENT','ADMIN','TRAVELER')")
+    @PreAuthorize("hasAnyRole('TRAVEL_AGENT','ADMIN','TRAVELER')")
     public ResponseEntity<Itinerary> updateStatus(@PathVariable Long id, @RequestParam String status) {
         return ResponseEntity.ok(service.updateStatus(id, status));
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyRole('TRAVEL AGENT','ADMIN','TRAVELER')")
+    @PreAuthorize("hasAnyRole('TRAVEL_AGENT','ADMIN','TRAVELER')")
     public void delete(@PathVariable Long id) {
         service.delete(id);
     }

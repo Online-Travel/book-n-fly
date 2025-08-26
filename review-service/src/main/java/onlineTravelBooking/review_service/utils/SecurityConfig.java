@@ -30,8 +30,9 @@ public class SecurityConfig {
                         .requestMatchers("/api/reviews").hasRole("TRAVELER") // POST - add review
                         .requestMatchers("/api/reviews/my").hasRole("TRAVELER") // GET - user's own reviews
                         .requestMatchers("/api/reviews/hotel/**").authenticated() // GET - hotel reviews (all authenticated users)
+                        .requestMatchers("/api/reviews/all").hasRole("ADMIN")
                         .requestMatchers("/api/reviews/{reviewId}").hasRole("TRAVELER") // PUT/DELETE - update/delete review
-                        .requestMatchers("/api/reviews/all/**").hasRole("ADMIN") // GET - all reviews (admin only)
+                        //.requestMatchers("/api/reviews/all").hasRole("ADMIN") // GET - all reviews (admin only)
 
                         // Support Ticket endpoints with role-based access
                         .requestMatchers("/api/support-tickets").hasRole("TRAVELER") // POST - create ticket
@@ -40,8 +41,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/support-tickets/all").hasRole("ADMIN") // GET - all tickets (admin)
                         .requestMatchers("/api/support-tickets/open").hasRole("ADMIN") // GET - open tickets (admin)
                         .requestMatchers("/api/support-tickets/{ticketId}/assign/{agentId}").hasRole("ADMIN") // PUT - assign ticket (admin)
-                        .requestMatchers("/api/support-tickets/{ticketId}/close").hasRole("TRAVEL AGENT") // PUT - close ticket (agent)
-                        .requestMatchers("/api/support-tickets/assigned").hasRole("TRAVEL AGENT") // GET - assigned tickets (agent)
+                        .requestMatchers("/api/support-tickets/{ticketId}/close").hasRole("TRAVEL_AGENT") // PUT - close ticket (agent)
+                        .requestMatchers("/api/support-tickets/assigned").hasRole("TRAVEL_AGENT") // GET - assigned tickets (agent)
 
                         // All other requests require authentication
                         .anyRequest().authenticated()

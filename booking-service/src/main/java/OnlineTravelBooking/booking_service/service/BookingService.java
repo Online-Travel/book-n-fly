@@ -12,7 +12,7 @@ public interface BookingService {
 
     Optional<Booking> getBookingById(Long bookingId);
 
-    Booking addBooking(BookingRequestDTO booking);
+    Booking addBooking(String token, BookingRequestDTO booking);
 
     Booking updateBooking(Long bookingId, UpdateBookingRequestDTO booking);
 
