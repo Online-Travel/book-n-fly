@@ -94,4 +94,9 @@ public class ReviewServiceImpl implements ReviewService{
         dto.setTimestamp(r.getTimestamp());
         return dto;
     }
+    
+    public double getAverageRatingForHotel(Long hotelId) {
+        Double avgRating = repo.findAverageRatingByHotelId(hotelId);
+        return avgRating != null ? avgRating : 0.0;
+    }
 }

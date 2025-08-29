@@ -18,4 +18,6 @@ public interface ReviewService {
     void deleteReview(Long userId, Long reviewId);
 
     List<ReviewResponseDTO> getAllReviews();
+    
+    double getAverageRatingForHotel(Long hotelId);
 }

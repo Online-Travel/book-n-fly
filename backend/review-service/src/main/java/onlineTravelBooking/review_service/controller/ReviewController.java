@@ -1,14 +1,19 @@
 package onlineTravelBooking.review_service.controller;
 
 import jakarta.validation.Valid;
+
+import onlineTravelBooking.review_service.client.BookingClient;
+import onlineTravelBooking.review_service.dto.BookingDto;
 import onlineTravelBooking.review_service.dto.ReviewRequestDTO;
 import onlineTravelBooking.review_service.dto.ReviewResponseDTO;
+import onlineTravelBooking.review_service.entity.BookingType;
 import onlineTravelBooking.review_service.service.ReviewService;
-import onlineTravelBooking.review_service.service.UserClient;
 import onlineTravelBooking.review_service.utils.JwtUtil;
+import org.springframework.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -17,14 +22,14 @@ import java.util.List;
 public class ReviewController {
 
     private final ReviewService reviewService;
-    private final UserClient userClient;
     private final JwtUtil jwtUtil;
+    private final BookingClient bookingClient;
 
     @Autowired
-    public ReviewController(ReviewService reviewService, UserClient userClient, JwtUtil jwtUtil) {
+    public ReviewController(ReviewService reviewService, JwtUtil jwtUtil, BookingClient bookingClient) {
         this.reviewService = reviewService;
-        this.userClient = userClient;
         this.jwtUtil = jwtUtil;
+        this.bookingClient = bookingClient;
     }
 
     // Add review - Only accessible by TRAVELER
@@ -32,17 +37,30 @@ public class ReviewController {
     @PreAuthorize("hasRole('TRAVELER')")
     public ReviewResponseDTO addReview(@RequestHeader("Authorization") String token,
                                        @Valid @RequestBody ReviewRequestDTO dto) {
-        try{
-            Long userId = jwtUtil.extractUserId(token.substring(7).trim());
-            System.out.println("Extracted userId in cont"+userId);
+        try {
+            String jwt = token.startsWith("Bearer ") ? token.substring(7).trim() : token.trim();
+            Long userId = jwtUtil.extractUserId(jwt);
+
+            // Prepare booking check request
+            BookingDto bookingDto = new BookingDto();
+            bookingDto.setType(BookingType.HOTEL); // assuming review is always for hotel
+            bookingDto.setItemId(dto.getHotelId());
+            bookingDto.setUserId(userId);
+
+            Boolean hasBooked = bookingClient.hasBooked(bookingDto);
+
+            if (hasBooked == null || !hasBooked) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+                        "You can only review hotels you have booked.");
+            }
+
             return reviewService.addReview(userId, dto);
-        }
-        catch (Exception e){
-            System.out.println("Error in addReview controller"+e.getMessage());
+
+        } catch (Exception e) {
+            System.out.println("Error in addReview controller: " + e.getMessage());
             e.printStackTrace();
             throw e;
         }
-
     }
 
     // Get logged-in user's reviews - TRAVELER only
@@ -87,5 +105,11 @@ public class ReviewController {
     public List<ReviewResponseDTO> getAllReviews() {
         System.out.println("Admin arrived");
         return reviewService.getAllReviews();
+    }
+    
+    @GetMapping("/hotel/{hotelId}/average-rating")
+    @PreAuthorize("isAuthenticated()")
+    public double getHotelAverageRating(@PathVariable Long hotelId) {
+        return reviewService.getAverageRatingForHotel(hotelId);
     }
 }
