@@ -66,4 +66,15 @@ public class BookingController {
         return ResponseEntity.status(HttpStatus.OK).body("Removed Booking");
     }
 
+    @PostMapping("/hasBooked")
+    @PreAuthorize("hasRole('TRAVELER')")
+    public ResponseEntity<Boolean> hasBooked(@RequestBody BookingRequestDTO bookingDto) {
+        Booking booking = bookingService.getBookingByDetails(
+                bookingDto.getType(),
+                bookingDto.getItemId(),
+                bookingDto.getUserId());
+
+        return ResponseEntity.ok(booking != null);
+    }
+
 }
