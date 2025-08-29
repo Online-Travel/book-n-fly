@@ -17,6 +17,8 @@ public class Booking {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long bookingId;
 
+    private Long itemId;
+
     private Long userId;
 
     @Enumerated(EnumType.STRING)
