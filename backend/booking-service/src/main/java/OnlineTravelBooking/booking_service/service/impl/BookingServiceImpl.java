@@ -3,6 +3,7 @@ package OnlineTravelBooking.booking_service.service.impl;
 import OnlineTravelBooking.booking_service.dto.BookingRequestDTO;
 import OnlineTravelBooking.booking_service.dto.UpdateBookingRequestDTO;
 import OnlineTravelBooking.booking_service.model.Booking;
+import OnlineTravelBooking.booking_service.model.BookingType;
 import OnlineTravelBooking.booking_service.repository.BookingRepository;
 import OnlineTravelBooking.booking_service.service.BookingService;
 import OnlineTravelBooking.booking_service.utils.JwtUtil;
@@ -57,5 +58,10 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public void deleteBooking(Long bookingId) {
         bookingRepository.deleteById(bookingId);
+    }
+
+    @Override
+    public Booking getBookingByDetails(BookingType type, Long itemId, Long userId) {
+        return bookingRepository.findByTypeAndItemIdAndUserId(type, itemId, userId);
     }
 }
