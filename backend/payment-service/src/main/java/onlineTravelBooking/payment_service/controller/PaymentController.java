@@ -1,23 +1,18 @@
 package onlineTravelBooking.payment_service.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 //import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
+import com.razorpay.Order;
+import onlineTravelBooking.payment_service.service.RazorPaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.bind.annotation.*;
 
 import onlineTravelBooking.payment_service.dto.BookingPaymentResponseDTO;
 import onlineTravelBooking.payment_service.dto.PaymentRequestDTO;
@@ -38,6 +33,12 @@ public class PaymentController {
     
     @Autowired
     private JwtUtil jwtUtil;
+
+    @Autowired
+    private RazorPaymentService razorPaymentService;
+
+    private final String KEY_ID = "rzp_test_m17StH2RvJgYRu"; // your Razorpay Key ID
+    private final String KEY_SECRET = "LPizoSMeqePb0Bx8YCyIATF0";
 
     //Saving the payment to the database by getting the userId from token
     //Need to communicate with the booking service to update the paymentId in the booking table
@@ -127,4 +128,25 @@ public class PaymentController {
         return ResponseEntity.ok(response);
     }
 
+    @PostMapping("/create-order")
+    public Map<String, Object> createOrder(@RequestParam int amount) throws Exception {
+        try {
+            Order order = razorPaymentService.createOrder(amount);
+
+            // Convert Razorpay order to Map
+            Map<String, Object> response = new HashMap<>();
+            response.put("id", order.get("id"));
+            response.put("amount", order.get("amount"));
+            response.put("currency", order.get("currency"));
+            response.put("status", order.get("status"));
+
+            return response;
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("error", "Unable to create order");
+            return errorResponse;
+        }
+    }
 }
