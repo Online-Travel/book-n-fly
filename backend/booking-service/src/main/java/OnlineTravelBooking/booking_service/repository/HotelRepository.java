@@ -12,6 +12,8 @@ import java.util.List;
 public interface HotelRepository extends JpaRepository<Hotel, Long> {
     List<Hotel> findByLocationIgnoreCase(String location);
 
+    List<Hotel> findByUserId(Long userId);
+
     @Query("SELECT h FROM Hotel h " +
             "WHERE (:location IS NULL OR LOWER(h.location) = LOWER(:location)) " +
             "AND (:minRating IS NULL OR h.rating >= :minRating) " +

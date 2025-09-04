@@ -1,6 +1,5 @@
-package OnlineTravelBooking.booking_service.model;
+package OnlineTravelBooking.booking_service.dto;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,14 +7,9 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@Entity
-@Table(name = "hotels")
 @NoArgsConstructor
 @AllArgsConstructor
-public class Hotel {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class HotelRequestDTO {
     private Long hotelId;
 
     private String name;
@@ -27,6 +21,4 @@ public class Hotel {
     private Double rating;
 
     private Double pricePerNight;
-
-    private Long userId;
 }
