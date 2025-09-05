@@ -3,6 +3,7 @@ package OnlineTravelBooking.booking_service.controller;
 import java.util.List;
 import java.util.Optional;
 
+import OnlineTravelBooking.booking_service.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,8 +28,13 @@ import OnlineTravelBooking.booking_service.service.BookingService;
 public class BookingController {
 
 
-    @Autowired
-    private BookingService bookingService;
+    private final BookingService bookingService;
+    private final JwtUtil jwtUtil;
+
+    public BookingController(JwtUtil jwtUtil, BookingService bookingService) {
+        this.bookingService = bookingService;
+        this.jwtUtil = jwtUtil;
+    }
 
 
     @GetMapping("/{bookingId}")
@@ -47,7 +53,7 @@ public class BookingController {
 
     @PostMapping
     @PreAuthorize("hasRole('TRAVELER')")
-    public ResponseEntity<Booking> createBooking(@RequestHeader("Authorization") String token,@RequestBody BookingRequestDTO booking) {
+    public ResponseEntity<Booking> createBooking(@RequestHeader("Authorization") String token, @RequestBody BookingRequestDTO booking) {
         Booking createdBooking = bookingService.addBooking(token.substring(7).trim(), booking);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdBooking);
     }
@@ -77,4 +83,17 @@ public class BookingController {
         return ResponseEntity.ok(booking != null);
     }
 
+    @GetMapping("/my-bookings")
+    @PreAuthorize("hasRole('TRAVELER')")
+    public ResponseEntity<List<Booking>> getMyBookings(@RequestHeader("Authorization") String token) {
+        String jwt = token.startsWith("Bearer ") ? token.substring(7).trim() : token.trim();
+        Long userId = jwtUtil.extractUserId(jwt);
+
+        List<Booking> existingBookings = bookingService.getBookingByUserId(userId);
+
+        if (existingBookings == null || existingBookings.isEmpty())
+            return ResponseEntity.notFound().build();
+        else
+            return ResponseEntity.ok(existingBookings);
+    }
 }

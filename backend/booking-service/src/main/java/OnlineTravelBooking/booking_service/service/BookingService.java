@@ -20,4 +20,6 @@ public interface BookingService {
     void deleteBooking(Long bookingId);
 
     Booking getBookingByDetails(BookingType type, Long itemId, Long userId);
+
+    List<Booking> getBookingByUserId(Long userId);
 }
