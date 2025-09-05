@@ -64,4 +64,9 @@ public class BookingServiceImpl implements BookingService {
     public Booking getBookingByDetails(BookingType type, Long itemId, Long userId) {
         return bookingRepository.findByTypeAndItemIdAndUserId(type, itemId, userId);
     }
+
+    @Override
+    public List<Booking> getBookingByUserId(Long userId) {
+        return bookingRepository.findAllByUserId(userId);
+    }
 }
