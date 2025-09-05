@@ -1,0 +1,128 @@
+<app-package-navbar></app-package-navbar>
+<div class="container my-5">
+  <!-- Header -->
+  <!-- Add / Update Form (Bootstrap Card) -->
+  <div *ngIf="showForm" class="card border-0 shadow-sm mb-4">
+    <div class="card-header bg-primary text-white">
+      <h5 class="mb-0">
+        <i class="bi bi-pencil-square me-2"></i>
+        {{ packageForm.packageId ? 'Update Package' : 'Update Package' }}
+      </h5>
+    </div>
+    <form (ngSubmit)="onSubmit()" class="card-body">
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label fw-semibold">Name</label>
+          <input [(ngModel)]="packageForm.name" name="name" class="form-control" placeholder="Enter package name" required />
+        </div>
+        <div class="col-md-6">
+          <label class="form-label fw-semibold">Destination</label>
+          <input [(ngModel)]="packageForm.destination" name="destination" class="form-control" placeholder="Enter destination" required />
+        </div>
+        <div class="col-12">
+          <label class="form-label fw-semibold">Description</label>
+          <textarea [(ngModel)]="packageForm.description" name="description" class="form-control" rows="2" placeholder="Enter description"></textarea>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label fw-semibold">Price (INR)</label>
+          <input type="number" [(ngModel)]="packageForm.price" name="price" class="form-control" required />
+        </div>
+        <div class="col-md-4">
+          <label class="form-label fw-semibold">Duration (days)</label>
+          <input type="number" [(ngModel)]="packageForm.durationDays" name="durationDays" class="form-control" required />
+        </div>
+        <div class="col-md-12">
+          <label class="form-label fw-semibold">Activities</label>
+          <input [(ngModel)]="activitiesInput" name="activities" class="form-control" placeholder="e.g. Hiking, Swimming" />
+        </div>
+      </div>
+
+      <div class="mt-4 d-flex justify-content-end gap-2">
+        <button type="button" class="btn btn-outline-secondary" (click)="resetForm()">
+          <i class="bi bi-arrow-repeat me-1"></i> Reset
+        </button>
+        <button type="submit" class="btn btn-success">
+          <i class="bi bi-check-circle me-1"></i>
+          {{ packageForm.packageId ? 'Update Package' : 'Update Package' }}
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Package Table -->
+  <div class="card border-0 shadow-sm">
+    <div class="card-header bg-dark text-white">
+      <h5 class="mb-0"><i class="bi bi-box-seam me-2"></i> Travel Packages</h5>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-hover table-striped align-middle text-center mb-0">
+        <thead class="table-dark">
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Destination</th>
+            <th>Description</th>
+            <th>Activities</th>
+            <th>Price</th>
+            <th>Duration</th>
+            <th>Status</th>
+            <th>Hotel Id</th>
+            <th>Flight Id</th>
+            <th>Actions</th>
+            <th>Delete Package</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let pkg of packages">
+            <td>{{ pkg.packageId }}</td>
+            <td class="fw-semibold text-primary">{{ pkg.name }}</td>
+            <td>{{ pkg.destination }}</td>
+            <td class="text-muted small">{{ pkg.description }}</td>
+            <td>
+              <span *ngFor="let activity of pkg.activities" class="badge bg-info text-dark me-1">
+                {{ activity }}
+              </span>
+            </td>
+            <td class="fw-bold">{{ pkg.price | currency: "INR" }}</td>
+            <td>{{ pkg.durationDays }} days</td>
+            <td>
+              <span class="badge rounded-pill px-3 py-2" [ngClass]="pkg.isActive ? 'bg-success' : 'bg-danger'">
+                {{ pkg.isActive ? "Active" : "Inactive" }}
+              </span>
+            </td>
+            <td>
+              <span *ngIf="pkg.includedHotelIds?.length; else noHotel">
+                <i class="bi bi-building"></i> {{ pkg.includedHotelIds.join(', ') }}
+              </span>
+              <ng-template #noHotel><span class="text-muted fst-italic">No Hotels</span></ng-template>
+            </td>
+            <td>
+              <span *ngIf="pkg.includedFlightIds?.length; else noFlight">
+                <i class="bi bi-airplane"></i> {{ pkg.includedFlightIds.join(', ') }}
+              </span>
+              <ng-template #noFlight><span class="text-muted fst-italic">No Flights</span></ng-template>
+            </td>
+            <td>
+              <div class="btn-group">
+                <button class="btn btn-sm btn-outline-primary" (click)="editPackage(pkg)">
+                  <i class="bi bi-pencil"></i>
+                </button>
+                <button *ngIf="pkg.isActive" class="btn btn-sm btn-outline-danger" (click)="softDelete(pkg.packageId)">
+                  <i class="bi bi-x-circle"></i>
+                </button>
+                <button *ngIf="!pkg.isActive" class="btn btn-sm btn-outline-success" (click)="makeActive(pkg.packageId)">
+                  <i class="bi bi-check-circle"></i>
+                </button>
+              </div>
+            </td>
+            <td>
+            <button class="btn btn-sm btn-danger" style="background: red" (click)="hardDelete(pkg.packageId)">
+            <i class="bi bi-trash"></i> Delete
+            </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

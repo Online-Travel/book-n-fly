@@ -1,0 +1,52 @@
+<app-booking-navbar></app-booking-navbar>
+<h2>Hotels (Admin)</h2>
+
+<!-- Search Section -->
+<h2>Search Hotel by ID</h2>
+<input type="number" [(ngModel)]="hotelId" placeholder="Enter hotel ID" />
+<button (click)="searchHotel()">Search</button>
+<button (click)="resetSearch()">Reset</button>
+
+<!-- Error -->
+<div *ngIf="error" style="color:red">{{ error }}</div>
+
+<!-- Hotels List -->
+<table class="tbl" *ngIf="displayedHotels.length > 0">
+  <thead>
+    <tr>
+      <th>Hotel ID</th>
+      <th>Hotel Name</th>
+      <th>Location</th>
+      <th>Rooms Available</th>
+      <th>Rating</th>
+      <th>Price/Night</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let h of displayedHotels">
+      <td>{{ h.hotelId }}</td>
+      <td>{{ h.name }}</td>
+      <td>{{ h.location }}</td>
+      <td>{{ h.roomsAvailable }}</td>
+      <td>{{ h.rating }}</td>
+      <td>{{ h.pricePerNight }}</td>
+      <td class="actions">
+        <button (click)="view(h.hotelId!)">View</button>
+        <button (click)="remove(h.hotelId!)">Delete</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- No results -->
+<div *ngIf="!error && displayedHotels.length === 0">
+  <p>No hotels found.</p>
+</div>
+
+<!-- Selected Hotel -->
+<div *ngIf="selected" class="details">
+  <h3>Details</h3>
+  <pre>{{ selected | json }}</pre>
+</div>
+

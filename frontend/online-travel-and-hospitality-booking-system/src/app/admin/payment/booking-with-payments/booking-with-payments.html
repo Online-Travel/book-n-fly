@@ -1,0 +1,37 @@
+<app-payment-navbar></app-payment-navbar>
+<router-outlet></router-outlet>
+
+<div *ngIf="allBookingsWithPayments.length > 0; else noData">
+  <div *ngFor="let bp of allBookingsWithPayments" class="booking-card">
+    <h3>Booking ID: {{ bp.bookingDTO.bookingId }}</h3>
+    <p>User ID: {{ bp.bookingDTO.userId }}</p>
+    <p>Status: {{ bp.bookingDTO.status }}</p>
+    <p>Type: {{ bp.bookingDTO.type }}</p>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Payment ID</th>
+          <th>Amount</th>
+          <th>Status</th>
+          <th>Method</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let payment of bp.paymentResponseDTO">
+          <td>{{ payment.paymentId }}</td>
+          <td>{{ payment.amount }}</td>
+          <td>{{ payment.status }}</td>
+          <td>{{ payment.paymentMethod }}</td>
+        </tr>
+        <tr *ngIf="bp.paymentResponseDTO.length === 0">
+          <td colspan="4">No payments available</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<ng-template #noData>
+  <p>No bookings found.</p>
+</ng-template>

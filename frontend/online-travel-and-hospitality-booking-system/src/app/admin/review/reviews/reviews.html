@@ -1,0 +1,45 @@
+<app-review-navbar></app-review-navbar>
+
+<h2>Reviews</h2>
+
+<div class="controls">
+  <div class="row">
+    <input type="number" [(ngModel)]="hotelId" placeholder="Hotel ID" />
+    <button (click)="searchByHotel()">Search by Hotel</button>
+    <button (click)="reset()">Reset</button>
+  </div>
+
+  <div class="row" *ngIf="auth.getRole?.() === 'ADMIN'">
+    <button (click)="loadAllForAdmin()">Load All</button>
+  </div>
+</div>
+
+<div *ngIf="loading">Loading...</div>
+<div *ngIf="error" class="err">{{ error }}</div>
+
+<table class="tbl" *ngIf="reviews.length">
+  <thead>
+    <tr>
+      <th>Review ID</th>
+      <th>User ID</th>
+      <th>Hotel ID</th>
+      <th>Rating</th>
+      <th>Comment</th>
+      <th>Timestamp</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let r of reviews">
+      <td>{{ r.reviewId }}</td>
+      <td>{{ r.userId }}</td>
+      <td>{{ r.hotelId }}</td>
+      <td>{{ r.rating }}</td>
+      <td>{{ r.comment }}</td>
+      <td>{{ r.timestamp }}</td>
+    </tr>
+  </tbody>
+</table>
+
+<div *ngIf="!loading && !error && !reviews.length">
+  <em>No reviews to display.</em>
+</div>
