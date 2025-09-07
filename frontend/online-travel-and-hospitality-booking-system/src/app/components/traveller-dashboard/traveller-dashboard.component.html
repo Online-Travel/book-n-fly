@@ -1,0 +1,523 @@
+
+  <!-- Navigation Tabs -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top w-100">
+  <div class="container">
+    <a class="navbar-brand" href="#">
+      <i class="fas fa-plane"></i> Travel Booking
+    </a>
+    
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item">
+          <button 
+            class="nav-link btn btn-link text-white"
+            [class.active]="activeTab === 'hotels'"
+            (click)="setActiveTab('hotels')">
+            <i class="fas fa-hotel me-1"></i> Hotels
+          </button>
+        </li>
+        <li class="nav-item">
+          <button 
+            class="nav-link btn btn-link text-white"
+            [class.active]="activeTab === 'flights'"
+            (click)="setActiveTab('flights')">
+            <i class="fas fa-plane me-1"></i> Flights
+          </button>
+        </li>
+        <li class="nav-item">
+          <button 
+            class="nav-link btn btn-link text-white"
+            [class.active]="activeTab === 'packages'"
+            (click)="setActiveTab('packages')">
+            <i class="fas fa-box me-1"></i> Packages
+          </button>
+        </li>
+      </ul>
+      
+      <!-- User Profile Dropdown -->
+      <ul class="navbar-nav">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle d-flex align-items-center" 
+             href="#" 
+             id="userDropdown" 
+             role="button" 
+             data-bs-toggle="dropdown" 
+             aria-expanded="false">
+            <div class="rounded-circle bg-light d-flex align-items-center justify-content-center me-2" 
+                 style="width: 35px; height: 35px;">
+              <i class="fas fa-user text-primary"></i>
+            </div>
+            <span class="d-none d-md-inline text-white">User</span>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+            <li>
+              <a class="dropdown-item" href="#" (click)="navigateToProfile($event)">
+                <i class="fas fa-user-circle me-2"></i>Your Profile
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="#" (click)="navigateToSupport($event)">
+                <i class="fas fa-headset me-2"></i>Customer Support
+              </a>
+            </li>
+            <li><hr class="dropdown-divider"></li>
+            <li>
+              <a class="dropdown-item text-danger" href="#" (click)="logout($event)">
+                <i class="fas fa-sign-out-alt me-2"></i>Logout
+              </a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  <!-- Main Content -->
+  <div class="container mt-4">
+    <!-- Filter Section -->
+     <!-- ...existing code above... -->
+<div class="card mb-4 shadow-sm">
+  <div class="card-body">
+    <h5 class="card-title mb-3">
+      <i class="fas fa-filter"></i> Filters & Search
+    </h5>
+    <div class="row g-3">
+  <!-- Search Input -->
+  <div class="col-md-6 col-lg-4">
+    <label class="form-label">Search</label>
+    <div class="input-group">
+      <span class="input-group-text"><i class="fas fa-search"></i></span>
+      <input 
+        type="text" 
+        class="form-control" 
+        placeholder="Search..."
+        [(ngModel)]="searchText">
+    </div>
+  </div>
+
+  <!-- Price Range -->
+  <div class="col-md-3 col-lg-2">
+    <label class="form-label">Min Price</label>
+    <input type="number" class="form-control" [(ngModel)]="minPrice">
+  </div>
+  <div class="col-md-3 col-lg-2">
+    <label class="form-label">Max Price</label>
+    <input type="number" class="form-control" [(ngModel)]="maxPrice">
+  </div>
+
+  <!-- Hotel-specific filters -->
+  <div *ngIf="activeTab === 'hotels'" class="row g-3">
+    <div class="col-md-6 col-lg-2">
+      <label class="form-label">Location</label>
+      <select class="form-select" [(ngModel)]="selectedLocation">
+        <option value="">All Locations</option>
+        <option *ngFor="let location of locations" [value]="location">{{location}}</option>
+      </select>
+    </div>
+    <div class="col-md-3 col-lg-1">
+      <label class="form-label">Min Rating</label>
+      <input type="number" class="form-control" min="0" max="5" step="0.1" [(ngModel)]="minRating">
+    </div>
+    <div class="col-md-3 col-lg-1">
+      <label class="form-label">Max Rating</label>
+      <input type="number" class="form-control" min="0" max="5" step="0.1" [(ngModel)]="maxRating">
+    </div>
+    <div class="col-md-3 col-lg-1">
+      <label class="form-label">Min Rooms</label>
+      <input type="number" class="form-control" min="0" max="100" step="0.1" [(ngModel)]="minRooms">
+    </div>
+    <div class="col-md-3 col-lg-1">
+      <label class="form-label">Max Rooms</label>
+      <input type="number" class="form-control" min="0" max="100" step="0.1" [(ngModel)]="maxRooms">
+    </div>
+  </div>
+
+  <!-- Flight-specific filters -->
+  <div *ngIf="activeTab === 'flights'" class="row g-3">
+    <div class="col-md-6 col-lg-2">
+      <label class="form-label">Airline</label>
+      <select class="form-select" [(ngModel)]="selectedAirline">
+        <option value="">All Airlines</option>
+        <option *ngFor="let airline of airlines" [value]="airline">{{airline}}</option>
+      </select>
+    </div>
+    <div class="col-md-6 col-lg-2">
+      <label class="form-label">Departure</label>
+      <select class="form-select" [(ngModel)]="selectedDeparture">
+        <option value="">All Departures</option>
+        <option *ngFor="let departure of departures" [value]="departure">{{departure}}</option>
+      </select>
+    </div>
+    <div class="col-md-6 col-lg-2">
+      <label class="form-label">Arrival</label>
+      <select class="form-select" [(ngModel)]="selectedArrival">
+        <option value="">All Arrivals</option>
+        <option *ngFor="let arrival of arrivals" [value]="arrival">{{arrival}}</option>
+      </select>
+    </div>
+    <div class="col-md-6 col-lg-2">
+      <label class="form-label">Availability</label>
+      <select class="form-select" [(ngModel)]="availabilityFilter">
+        <option value="all">All</option>
+        <option value="available">Available</option>
+        <option value="unavailable">Unavailable</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Package-specific filters -->
+  <div *ngIf="activeTab === 'packages'" class="row g-3">
+    <div class="col-md-6 col-lg-4">
+      <label class="form-label">Destination</label>
+      <select class="form-select" [(ngModel)]="selectedLocation">
+        <option value="">All Destinations</option>
+        <option *ngFor="let destination of destinations" [value]="destination">{{destination}}</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+    <!-- Single Button for Applying Filters/Search -->
+    <div class="row mt-3">
+      <div class="col">
+        <button
+          class="btn btn-primary"
+          (click)="applyFiltersAndSearch()">
+          <i class="fas fa-search"></i>
+          Apply Filters/Search
+        </button>
+      </div>
+    </div>
+
+    <!-- Sort Controls (not included in filter button) -->
+    <div class="row mt-3">
+      <div class="col-auto">
+        <label class="form-label">Sort By</label>
+        <select 
+          class="form-select" 
+          [(ngModel)]="sortBy"
+          (change)="onSortChange()">
+          <option value="">Default</option>
+          <ng-container *ngIf="activeTab === 'hotels'">
+            <option value="name">Name</option>
+            <option value="location">Location</option>
+            <option value="pricePerNight">Price</option>
+            <option value="rating">Rating</option>
+            <option value="roomsAvailable">Rooms Available</option>
+          </ng-container>
+          <ng-container *ngIf="activeTab === 'flights'">
+            <option value="airline">Airline</option>
+            <option value="departure">Departure</option>
+            <option value="arrival">Arrival</option>
+            <option value="price">Price</option>
+          </ng-container>
+          <ng-container *ngIf="activeTab === 'packages'">
+            <option value="name">Name</option>
+            <option value="destination">Destination</option>
+            <option value="price">Price</option>
+            <option value="durationDays">Duration</option>
+          </ng-container>
+        </select>
+      </div>
+      <div class="col-auto" *ngIf="sortBy">
+        <label class="form-label">&nbsp;</label>
+        <button 
+          class="btn btn-outline-primary d-block"
+          (click)="toggleSortOrder()">
+          <i class="fas" [class.fa-sort-up]="sortOrder === 'asc'" [class.fa-sort-down]="sortOrder === 'desc'"></i>
+          {{sortOrder === 'asc' ? 'Ascending' : 'Descending'}}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- ...existing code below for results... -->
+
+    
+
+    <!-- Results Section -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h4 class="mb-0">
+        <ng-container [ngSwitch]="activeTab">
+          <span *ngSwitchCase="'hotels'"><i class="fas fa-hotel"></i> Hotels</span>
+          <span *ngSwitchCase="'flights'"><i class="fas fa-plane"></i> Flights</span>
+          <span *ngSwitchCase="'packages'"><i class="fas fa-box"></i> Packages</span>
+        </ng-container>
+        <span class="badge bg-secondary ms-2">{{filteredData.length}} Results</span>
+      </h4>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div *ngIf="loading" class="text-center py-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+
+    <!-- Results Grid -->
+    <div *ngIf="!loading" class="row g-4">
+      <div 
+        *ngFor="let item of filteredData" 
+        class="col-lg-4 col-md-6 col-sm-12">
+        <div class="card h-100 shadow-sm border-0 hover-card">
+          <!-- Card Image -->
+          <img 
+            [src]="getImageUrl(item)" 
+            class="card-img-top" 
+            style="height: 200px; object-fit: cover;"
+            [alt]="item.name || item.airline">
+          
+          <div class="card-body d-flex flex-column">
+            <!-- Hotel Card Content -->
+            <ng-container *ngIf="activeTab === 'hotels'">
+              <h5 class="card-title text-primary">{{item.name}}</h5>
+              <p class="card-text">
+                <i class="fas fa-map-marker-alt text-muted"></i> {{item.location}}
+              </p>
+              <div class="mb-2">
+                <span *ngFor="let star of getRatingStars(item.rating)" [class]="star"></span>
+                <small class="text-muted ms-1">({{item.rating}})</small>
+              </div>
+              <p class="card-text">
+                <small class="text-muted">
+                  <i class="fas fa-bed"></i> {{item.roomsAvailable}} rooms available
+                </small>
+              </p>
+              <div class="mt-auto">
+                <div class="d-flex justify-content-between align-items-center">
+                  <h4 class="text-success mb-0">₹{{item.pricePerNight | number}}</h4>
+                  <small class="text-muted">per night</small>
+                </div>
+                <button 
+                  class="btn btn-primary w-100 mt-3"
+                  (click)="bookItem(item)">
+                  <i class="fas fa-calendar-check"></i> Book Now
+                </button>
+              </div>
+            </ng-container>
+
+            <!-- Flight Card Content -->
+            <ng-container *ngIf="activeTab === 'flights'">
+              <h5 class="card-title text-primary">{{item.airline}}</h5>
+              <div class="flight-route mb-3">
+                <div class="d-flex align-items-center justify-content-between">
+                  <div class="text-center">
+                    <h6 class="mb-0">{{item.departure}}</h6>
+                    <small class="text-muted">From</small>
+                  </div>
+                  <div class="px-3">
+                    <i class="fas fa-plane text-primary"></i>
+                  </div>
+                  <div class="text-center">
+                    <h6 class="mb-0">{{item.arrival}}</h6>
+                    <small class="text-muted">To</small>
+                  </div>
+                </div>
+              </div>
+              <div class="mb-2">
+                <span 
+                  class="badge" 
+                  [class.bg-success]="item.availability" 
+                  [class.bg-danger]="!item.availability">
+                  {{item.availability ? 'Available' : 'Unavailable'}}
+                </span>
+              </div>
+              <div class="mt-auto">
+                <div class="d-flex justify-content-between align-items-center">
+                  <h4 class="text-success mb-0">₹{{item.price | number}}</h4>
+                  <small class="text-muted">per person</small>
+                </div>
+                <button 
+                  class="btn btn-primary w-100 mt-3"
+                  [disabled]="!item.availability"
+                  (click)="bookItem(item)">
+                  <i class="fas fa-plane-departure"></i> 
+                  {{item.availability ? 'Book Flight' : 'Unavailable'}}
+                </button>
+              </div>
+            </ng-container>
+
+            <!-- Package Card Content -->
+            <ng-container *ngIf="activeTab === 'packages'">
+              <h5 class="card-title text-primary">{{item.name}}</h5>
+              <p class="card-text">
+                <i class="fas fa-map-marker-alt text-muted"></i> {{item.destination}}
+              </p>
+              <p class="card-text text-truncate">{{item.description}}</p>
+              <div class="mb-2">
+                <small class="text-muted">
+                  <i class="fas fa-calendar-alt"></i> {{item.durationDays}} days
+                </small>
+              </div>
+              <div class="mb-3">
+                <h6>Activities:</h6>
+                <div class="d-flex flex-wrap gap-1">
+                  <span 
+                    *ngFor="let activity of item.activities.slice(0, 3)" 
+                    class="badge bg-light text-dark">
+                    {{activity}}
+                  </span>
+                  <span 
+                    *ngIf="item.activities.length > 3" 
+                    class="badge bg-secondary">
+                    +{{item.activities.length - 3}} more
+                  </span>
+                </div>
+              </div>
+              <div class="mt-auto">
+                <div class="d-flex justify-content-between align-items-center">
+                  <h4 class="text-success mb-0">₹{{item.price | number}}</h4>
+                  <small class="text-muted">total</small>
+                </div>
+                <button 
+                  class="btn btn-primary w-100 mt-3"
+                  (click)="bookItem(item)">
+                  <i class="fas fa-shopping-cart"></i> Book Package
+                </button>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- No Results -->
+    <div *ngIf="!loading && filteredData.length === 0" class="text-center py-5">
+      <i class="fas fa-search fa-3x text-muted mb-3"></i>
+      <h4 class="text-muted">No results found</h4>
+      <p class="text-muted">Try adjusting your filters or search criteria</p>
+    </div>
+  </div>
+
+
+
+
+<!-- Add this to your existing traveller-dashboard.component.html -->
+
+<!-- Itinerary Form Modal using Bootstrap -->
+<div class="modal d-flex" tabindex="-1" *ngIf="showItineraryForm" 
+     style="display: flex !important; background-color: rgba(0, 0, 0, 0.6);" 
+     (click)="closeItineraryForm()">
+  <div class="modal-dialog modal-lg modal-dialog-centered" (click)="$event.stopPropagation()">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title">
+          <i class="fas fa-calendar-plus me-2"></i>Create Itinerary
+        </h5>
+        <button type="button" class="btn-close btn-close-white" (click)="closeItineraryForm()"></button>
+      </div>
+
+      <!-- Package Info -->
+      <div class="bg-light p-3 border-bottom" *ngIf="selectedPackage">
+        <div class="d-flex justify-content-between align-items-center">
+          <h6 class="mb-0 text-dark fw-bold">{{ selectedPackage.name || selectedPackage.destination }}</h6>
+          <span class="badge bg-success fs-6">₹{{ selectedPackage.price | number }}</span>
+        </div>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="modal-body">
+        <form (ngSubmit)="submitItinerary()" #itineraryFormRef="ngForm">
+          <div class="row g-3">
+            <!-- Start Date -->
+            <div class="col-md-6">
+              <label for="startDate" class="form-label fw-semibold">
+                Start Date <span class="text-danger">*</span>
+              </label>
+              <input 
+                type="date" 
+                id="startDate" 
+                name="startDate"
+                [(ngModel)]="itineraryForm.startDate"
+                [min]="getMinDate()"
+                required
+                class="form-control">
+            </div>
+
+            <!-- End Date -->
+            <div class="col-md-6">
+              <label for="endDate" class="form-label fw-semibold">
+                End Date <span class="text-danger">*</span>
+              </label>
+              <input 
+                type="date" 
+                id="endDate" 
+                name="endDate"
+                [(ngModel)]="itineraryForm.endDate"
+                [min]="getMinEndDate()"
+                required
+                class="form-control">
+            </div>
+
+            <!-- Number of Travelers -->
+            <div class="col-md-6">
+              <label for="numberOfTravelers" class="form-label fw-semibold">
+                Number of Travelers <span class="text-danger">*</span>
+              </label>
+              <input 
+                type="number" 
+                id="numberOfTravelers" 
+                name="numberOfTravelers"
+                [(ngModel)]="itineraryForm.numberOfTravelers"
+                min="1"
+                max="20"
+                required
+                class="form-control">
+            </div>
+
+            
+            <!-- Customization Details -->
+            <div class="col-12">
+              <label for="customizationDetails" class="form-label fw-semibold">
+                Customization Details <span class="text-danger">*</span>
+              </label>
+              <textarea 
+                id="customizationDetails" 
+                name="customizationDetails"
+                [(ngModel)]="itineraryForm.customizationDetails"
+                rows="4"
+                placeholder="Describe your preferences, special requirements, interests, or any specific requests for your trip..."
+                required
+                class="form-control"></textarea>
+              <div class="form-text">
+                <i class="fas fa-info-circle me-1"></i>
+                Example: "First time India visitors from abroad. Need guided tours and cultural experiences."
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="modal-footer bg-light">
+        <button 
+          type="button" 
+          class="btn btn-outline-secondary"
+          (click)="closeItineraryForm()"
+          [disabled]="submittingItinerary">
+          <i class="fas fa-times me-1"></i> Cancel
+        </button>
+        <button 
+          type="submit" 
+          class="btn btn-primary"
+          (click)="submitItinerary()"
+          [disabled]="submittingItinerary || !itineraryFormRef.form.valid">
+          <span *ngIf="submittingItinerary">
+            <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+            Creating...
+          </span>
+          <span *ngIf="!submittingItinerary">
+            <i class="fas fa-calendar-plus me-1"></i> Create Itinerary
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
