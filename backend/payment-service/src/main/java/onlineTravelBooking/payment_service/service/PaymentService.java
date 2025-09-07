@@ -39,9 +39,9 @@ public class PaymentService {
     public PaymentResponseDTO savePayment(String token,PaymentRequestDTO paymentRequestDTO,Long userId){
         Payment exist=paymentRepository.findByBookingIdAndUserId(paymentRequestDTO.getBookingId(),userId);
         System.out.println("Save payment");
-        if(exist!=null){
-            throw new PaymentNotFoundException("Booking Id and userId is already found");
-        }
+//        if(exist!=null){
+//            throw new PaymentNotFoundException("Booking Id is already found");
+//        }
         Payment payment=new Payment();
         payment.setUserId(userId);
         payment.setBookingId(paymentRequestDTO.getBookingId());

@@ -19,6 +19,7 @@ public class HotelController {
     private HotelService hotelService;
 
     @GetMapping("/{hotelId}")
+    @PreAuthorize("hasRole('TRAVELER')")
     public ResponseEntity<Hotel> getHotelById(@PathVariable Long hotelId) {
         Optional<Hotel> hotel = hotelService.getHotelById(hotelId);
         return hotel.map(ResponseEntity::ok)
@@ -56,10 +57,13 @@ public class HotelController {
     public ResponseEntity<List<Hotel>> searchHotels(
             @RequestParam(required = false) String destination,
             @RequestParam(required = false) Double minRating,
+            @RequestParam(required = false) Double maxRating,
+            @RequestParam(required = false) Double minPrice,
             @RequestParam(required = false) Double maxPrice,
-            @RequestParam(required = false) Integer minRooms
+            @RequestParam(required = false) Integer minRooms,
+            @RequestParam(required = false) Integer maxRooms
     ) {
-        List<Hotel> hotels = hotelService.searchHotels(destination, minRating, maxPrice, minRooms);
+        List<Hotel> hotels = hotelService.searchHotels(destination, minRating, maxRating, minPrice, maxPrice, minRooms, maxRooms);
         return ResponseEntity.ok(hotels);
     }
 }
