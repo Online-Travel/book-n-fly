@@ -8,7 +8,7 @@ import { CreateSupportTicket, SupportTicket } from './../models/supportTicket';
   providedIn: 'root'
 })
 export class SupportTicketService {
-  private baseUrl = 'http://localhost:8078/api/support-tickets';
+  private baseUrl = 'http://localhost:8080/api/support-tickets';
   private isBrowser: boolean;
 
   constructor(

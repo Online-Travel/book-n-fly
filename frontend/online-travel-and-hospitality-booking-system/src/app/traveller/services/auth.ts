@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private apiUrl = 'http://localhost:8078/user/login'; // match Postman URL
+  private apiUrl = 'http://localhost:8080/user/login'; // match Postman URL
 
   constructor(private http: HttpClient, private router: Router) {}
 

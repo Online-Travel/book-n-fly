@@ -12,7 +12,7 @@ import { Itinerary } from './../models/itinerary';
     providedIn: 'root'
 })
 export class BookingService {
-private baseUrl = 'http://localhost:8078/api';
+private baseUrl = 'http://localhost:8080/api';
 
   constructor(private http: HttpClient) { }
 

@@ -6,9 +6,9 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class PaymentService {
-  private API_URL = 'http://localhost:8078/payments';
-  private INVOICE_URL = 'http://localhost:8078/invoice';
-  private Booking_URL = 'http://localhost:8078/api/bookings';
+  private API_URL = 'http://localhost:8080/payments';
+  private INVOICE_URL = 'http://localhost:8080/invoice';
+  private Booking_URL = 'http://localhost:8080/api/bookings';
 
 
   constructor(private http: HttpClient) { }

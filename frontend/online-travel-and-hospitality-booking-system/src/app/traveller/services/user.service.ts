@@ -41,10 +41,10 @@ export interface ItineraryUpdate {
   providedIn: 'root'
 })
 export class UserService {
-private bookingsApiUrl = 'http://localhost:8078/api/bookings/my-bookings';
-  private reviewsApiUrl = 'http://localhost:8078/api/reviews';
-  private itinerariesApiUrl = 'http://localhost:8078/api/itineraries/user';
-  private itineraryUpdateApiUrl = 'http://localhost:8078/api/itineraries';
+private bookingsApiUrl = 'http://localhost:8080/api/bookings/my-bookings';
+  private reviewsApiUrl = 'http://localhost:8080/api/reviews';
+  private itinerariesApiUrl = 'http://localhost:8080/api/itineraries/user';
+  private itineraryUpdateApiUrl = 'http://localhost:8080/api/itineraries';
 
   constructor(private http: HttpClient) {}
 
