@@ -96,4 +96,5 @@ public class BookingController {
         else
             return ResponseEntity.ok(existingBookings);
     }
+
 }

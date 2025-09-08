@@ -1,0 +1,78 @@
+<div class="user-container container mt-4">
+  <h2>All Users</h2>
+
+  <!-- Filters Section -->
+  <div class="mb-3 d-flex gap-2">
+    <input type="number"
+           class="form-control"
+           placeholder="Enter User ID"
+           [(ngModel)]="filterUserId">
+    <button class="btn btn-primary" (click)="filterUserById()">Filter</button>
+    <button class="btn btn-secondary" (click)="resetFilters()">Reset</button>
+  </div>
+
+  <div *ngIf="loading">Loading users...</div>
+  <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
+  <table class="table table-striped" *ngIf="users.length > 0; else noUsers">
+    <thead>
+      <tr>
+        <th>User ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Contact Number</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of users">
+        <td>{{ user.userId }}</td>
+        <td>{{ user.name }}</td>
+        <td>{{ user.email }}</td>
+        <td>{{ user.role }}</td>
+        <td>{{ user.contactNumber }}</td>
+        <td>
+          <button class="btn btn-sm btn-primary me-2" (click)="openUpdateModal(user)">Update</button>
+          <button class="btn btn-sm btn-danger" (click)="deleteUser(user.userId)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <ng-template #noUsers>
+    <p *ngIf="currentFilter === 'all'">No users found.</p>
+    <p *ngIf="currentFilter === 'user'">No user found with ID: {{ filterUserId }}</p>
+  </ng-template>
+</div>
+
+
+
+<!-- Update User Modal -->
+<div class="modal fade" id="updateUserModal" tabindex="-1" aria-labelledby="updateUserModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="updateUserModalLabel">Update User Role</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="mb-3">
+            <label>Select Role</label>
+            <select class="form-select" [(ngModel)]="selectedRole" name="role">
+              <option value="ADMIN">ADMIN</option>
+              <option value="TRAVELER">TRAVELER</option>
+              <option value="TRAVEL_AGENT">TRAVEL_AGENT</option>
+              <option value="HOTEL_MANAGER">HOTEL_MANAGER</option>
+            </select>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" (click)="confirmUpdate()">Save Changes</button>
+      </div>
+    </div>
+  </div>
+</div>

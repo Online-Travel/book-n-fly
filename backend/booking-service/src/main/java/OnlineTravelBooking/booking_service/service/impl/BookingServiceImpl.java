@@ -70,4 +70,5 @@ public class BookingServiceImpl implements BookingService {
     public List<Booking> getBookingByUserId(Long userId) {
         return bookingRepository.findAllByUserId(userId);
     }
+
 }

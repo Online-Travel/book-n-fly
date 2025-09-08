@@ -22,4 +22,5 @@ public interface BookingService {
     Booking getBookingByDetails(BookingType type, Long itemId, Long userId);
 
     List<Booking> getBookingByUserId(Long userId);
+
 }

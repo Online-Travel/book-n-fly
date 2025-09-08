@@ -1,0 +1,58 @@
+
+
+ <app-payment-navbar></app-payment-navbar>
+<div class="invoice-container">
+  <h2>Invoices</h2>
+  
+  <!-- Filters -->
+  <div class="filters">
+    <input type="number" 
+           placeholder="Filter by User ID" 
+           [(ngModel)]="userIdFilter">
+    <button (click)="filterByUser()">Filter</button>
+    
+    <input type="number" 
+           placeholder="Filter by Booking ID" 
+           [(ngModel)]="bookingIdFilter">
+    <button (click)="filterByBooking()">Filter</button>
+    
+    <button (click)="resetUserFilter()">Reset Filters</button>
+  </div>
+  
+  <!-- Loading state -->
+  <div *ngIf="loading">Loading invoices...</div>
+  
+  <!-- Error state (only for actual errors, not 404) -->
+  <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
+  
+  <!-- Table with data -->
+  <table *ngIf="invoices.length > 0" border="1" cellpadding="5" cellspacing="0">
+    <thead>
+      <tr>
+        <th>Invoice ID</th>
+        <th>Booking ID</th>
+        <th>User ID</th>
+        <th>Amount</th>
+        <th>Timestamp</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let invoice of invoices">
+        <td>{{ invoice.invoiceId }}</td>
+        <td>{{ invoice.bookingId }}</td>
+        <td>{{ invoice.userId }}</td>
+        <td>{{ invoice.amount | currency:'INR':'symbol' }}</td>
+        <td>{{ invoice.timestamp | date:'medium' }}</td>
+        <td>
+          <button (click)="deleteInvoice(invoice.invoiceId)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  
+  <!-- No data found state -->
+  <div *ngIf="invoices.length === 0 && !loading && !errorMessage">
+    <p>No invoices found.</p>
+  </div>
+</div>

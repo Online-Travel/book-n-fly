@@ -1,0 +1,50 @@
+<app-booking-navbar></app-booking-navbar>
+<h2>Bookings (Admin)</h2>
+
+<!-- Search Section -->
+<div>
+  <h3>Search Booking by ID</h3>
+  <input type="number" [(ngModel)]="bookingId" placeholder="Enter booking ID" />
+  <button (click)="searchBooking()">Search</button>
+  <button (click)="resetSearch()">Reset</button>
+</div>
+
+<!-- Error message -->
+<div *ngIf="error" style="color: red">{{ error }}</div>
+
+<!-- Booking List -->
+<table class="tbl" *ngIf="displayedBookings.length > 0">
+  <thead>
+    <tr>
+      <th>Booking ID</th>
+      <th>User ID</th>
+      <th>Type</th>
+      <th>Status</th>
+      <th>Payment ID</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let b of displayedBookings">
+      <td>{{ b.bookingId }}</td>
+      <td>{{ b.userId }}</td>
+      <td>{{ b.type }}</td>
+      <td>{{ b.status }}</td>
+      <td>{{ b.paymentId }}</td>
+      <td>
+        <button (click)="view(b.bookingId)">View</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- No results -->
+<div *ngIf="!error && displayedBookings.length === 0">
+  <p>No bookings found.</p>
+</div>
+
+<!-- Selected Booking -->
+<div *ngIf="selected" class="details">
+  <h3>Booking Details</h3>
+  <pre>{{ selected | json }}</pre>
+</div>
