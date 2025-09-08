@@ -12,9 +12,13 @@ import { Flights } from './admin/booking/flights/flights';
 import { Hotels } from './admin/booking/hotels/hotels';
 import { Reviews } from './admin/review/reviews/reviews';
 import { TicketComponent } from './admin/review/support-ticket/support-ticket';
+import { LandingPage } from './pages/landing/landing-page/landing-page';
 
 export const routes: Routes = [
-     { path: '', redirectTo: 'login', pathMatch: 'full' },
+    { path: '', component: LandingPage},
+    { path: 'landing', component: LandingPage},
+    { path: 'home', component: LandingPage},
+    //  { path: '', redirectTo: 'login', pathMatch: 'full' },
     { path: 'login', component: LoginComponent },
     {path:'payment',component:PaymentComponent},
     {path:'bookingwithpayments',component:BookingWithPayments},
