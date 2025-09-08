@@ -55,6 +55,7 @@ public class SupportTicketController {
                                                  @PathVariable Long ticketId,
                                                  @Valid @RequestBody SupportTicketRequestDTO dto) {
         Long userId = jwtUtil.extractUserId(token);
+        dto.setUserId(userId);
         return ticketService.updateTicket(userId, ticketId, dto);
     }
 

@@ -37,8 +37,13 @@ public class ItineraryController {
         return ResponseEntity.of(service.getItineraryById(id));
     }
 
-    @GetMapping("/user/{userId}")
-    public List<Itinerary> getUserItineraries(@PathVariable Long userId) {
+    @GetMapping("/user")
+
+    public List<Itinerary> getUserItineraries(@RequestHeader("Authorization") String authHeader) {
+    	String token = authHeader.startsWith("Bearer ") ? authHeader.substring(7).trim() : authHeader;
+        System.out.println("Incoming token: " + token);
+        Long userId = jwtUtil.extractUserId(token);
+        System.out.println("UserId: " + userId);
         return service.getItinerariesByUserId(userId);
     }
 

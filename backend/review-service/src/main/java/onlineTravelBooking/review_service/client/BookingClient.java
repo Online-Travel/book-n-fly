@@ -8,7 +8,7 @@ import onlineTravelBooking.review_service.dto.BookingDto;
 
 @FeignClient(
 	    name = "booking-service",
-	    url = "http://localhost:8083/api/bookings",
+	    url = "http://localhost:8080/api/bookings",
 	    configuration = FeignClientConfig.class
 	)
 public interface BookingClient {

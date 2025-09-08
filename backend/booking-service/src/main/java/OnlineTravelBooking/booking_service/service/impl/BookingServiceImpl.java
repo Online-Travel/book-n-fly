@@ -42,6 +42,7 @@ public class BookingServiceImpl implements BookingService {
         book.setUserId(jwtUtil.extractUserId(token));
         book.setType(booking.getType());
         book.setStatus("Pending");
+        book.setItemId(booking.getItemId());
 
         return bookingRepository.save(book);
     }
@@ -69,4 +70,5 @@ public class BookingServiceImpl implements BookingService {
     public List<Booking> getBookingByUserId(Long userId) {
         return bookingRepository.findAllByUserId(userId);
     }
+
 }

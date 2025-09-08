@@ -71,4 +71,5 @@
         public List<Hotel> searchHotels(String location, Double minRating, Double maxRating, Double minPrice, Double maxPrice, Integer minRooms, Integer maxRooms) {
             return hotelRepository.searchHotels(location, minRating, maxRating, minPrice, maxPrice, minRooms, maxRooms);
         }
+
     }

@@ -26,6 +26,7 @@ public class HotelController {
     }
 
     @GetMapping("/{hotelId}")
+    @PreAuthorize("hasRole('TRAVELER')")
     public ResponseEntity<Hotel> getHotelById(@PathVariable Long hotelId) {
         Optional<Hotel> hotel = hotelService.getHotelById(hotelId);
         return hotel.map(ResponseEntity::ok)
