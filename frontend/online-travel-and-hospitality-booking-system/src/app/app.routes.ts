@@ -1,10 +1,11 @@
 import { Routes } from '@angular/router';
-import { TravellerDashboardComponent } from './components/traveller-dashboard/traveller-dashboard.component';
-import { LoginComponent } from './components/login/login';
-import { Landing } from './components/landing/landing';
-import { HotelDetailsComponent } from './components/hotel-details/hotel-details.component';
-import { UserProfileComponent } from './components/user-profile/user-profile.component';
-import { CustomerSupportComponent } from './components/customer-support/customer-support.component';
+import { Landing } from './traveller/components/landing/landing';
+import { LoginComponent } from './traveller/components/login/login';
+import { TravellerDashboardComponent } from './traveller/components/traveller-dashboard/traveller-dashboard.component';
+import { HotelDetailsComponent } from './traveller/components/hotel-details/hotel-details.component';
+import { UserProfileComponent } from './traveller/components/user-profile/user-profile.component';
+import { CustomerSupportComponent } from './traveller/components/customer-support/customer-support.component';
+
 
 export const routes: Routes = [
     { path: '', component: Landing, pathMatch: 'full' },

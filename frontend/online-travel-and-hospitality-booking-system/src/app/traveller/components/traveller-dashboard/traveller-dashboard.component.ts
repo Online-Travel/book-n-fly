@@ -278,7 +278,7 @@ export class TravellerDashboardComponent implements OnInit {
   getImageUrl(item: any): string {
     switch (this.activeTab) {
       case 'hotels': return`hotel-1.jpg`;
-      case 'flights': return `hotel-2.jpg`;
+      case 'flights': return `flight-1.png`;
       case 'packages': return `hotel-3.jpg`;
       default: return `hotel-4.jpg`;
     }

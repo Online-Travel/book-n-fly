@@ -14,7 +14,7 @@ import { FormsModule } from '@angular/forms';
 
 import { App } from './app/app';
 import { routes } from './app/app.routes';
-import { TokenInterceptor } from './app/services/token-interceptor';
+import { TokenInterceptor } from './app/traveller/services/token-interceptor';
 
 bootstrapApplication(App, {
   providers: [

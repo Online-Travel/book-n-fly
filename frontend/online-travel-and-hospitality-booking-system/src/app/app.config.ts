@@ -2,10 +2,10 @@ import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZoneChang
 import { provideRouter } from '@angular/router';
 
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { TokenInterceptor } from './services/token-interceptor';
 
 import { routes } from './app.routes';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
+import { TokenInterceptor } from './traveller/services/token-interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [

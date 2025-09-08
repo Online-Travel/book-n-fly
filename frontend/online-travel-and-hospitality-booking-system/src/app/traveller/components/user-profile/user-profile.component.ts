@@ -232,9 +232,8 @@ userEmail: string | null = null;
     }
   }
   navigateBack(): void {
-
-  this.router.navigate(['traveller-dashboard']);
-}
+    this.router.navigate(['traveller-dashboard']);
+  }
 
   onLogout() {
     this.authService.logout();
