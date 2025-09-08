@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router';
-import { LoginComponent } from './login/login.component/login.component';
 import { PaymentComponent } from './admin/payment/payment.component/payment.component';
 import { BookingWithPayments } from './admin/payment/booking-with-payments/booking-with-payments';
 import { UserWithPayments } from './admin/payment/user-with-payments/user-with-payments';
@@ -13,6 +12,7 @@ import { Hotels } from './admin/booking/hotels/hotels';
 import { Reviews } from './admin/review/reviews/reviews';
 import { TicketComponent } from './admin/review/support-ticket/support-ticket';
 import { LandingPage } from './pages/landing/landing-page/landing-page';
+import { LoginComponent } from './pages/auth/login/login.component/login.component';
 
 export const routes: Routes = [
     { path: '', component: LandingPage},
