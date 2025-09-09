@@ -1,9 +1,9 @@
 package OnlineTravelBooking.package_service.service;
 
-import OnlineTravelBooking.package_service.model.Itinerary;
-
 import java.util.List;
 import java.util.Optional;
+
+import OnlineTravelBooking.package_service.model.Itinerary;
 
 public interface ItineraryService {
 
@@ -20,4 +20,6 @@ public interface ItineraryService {
     Itinerary updateStatus(Long id, String status);
 
     List<Itinerary> getItinerariesByUserId(Long userId);
+
+    List<Itinerary> getItinerariesByAgent(Long agentId);
 }

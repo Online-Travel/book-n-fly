@@ -1,15 +1,24 @@
 package OnlineTravelBooking.package_service.controller;
 
-import OnlineTravelBooking.package_service.model.Itinerary;
-import OnlineTravelBooking.package_service.service.ItineraryService;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import OnlineTravelBooking.package_service.model.Itinerary;
+import OnlineTravelBooking.package_service.service.ItineraryService;
 import OnlineTravelBooking.package_service.utils.JwtUtil;
-
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/itineraries")
@@ -73,6 +82,13 @@ public class ItineraryController {
     @PreAuthorize("hasAnyRole('TRAVEL_AGENT','ADMIN','TRAVELER')")
     public void delete(@PathVariable Long id) {
         service.delete(id);
+    }
+     @GetMapping("/agent")
+    @PreAuthorize("hasRole('TRAVEL_AGENT')")
+    public List<Itinerary> getAgentItineraries(@RequestHeader("Authorization") String authHeader) {
+        String token = authHeader.startsWith("Bearer ") ? authHeader.substring(7).trim() : authHeader;
+        Long agentId = jwtUtil.extractUserId(token);
+        return service.getItinerariesByAgent(agentId);
     }
 
 }
