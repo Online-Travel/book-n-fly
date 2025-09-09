@@ -29,6 +29,9 @@ import { TravelAgentDashboardComponent } from './TravelAgent-Dashboard/pages/das
 import { PackageComponent } from './TravelAgent-Dashboard/pages/packages/packages';
 import { ItinerariesComponent } from './TravelAgent-Dashboard/pages/itineraries/itineraries';
 import { SupportTicketComponent } from './TravelAgent-Dashboard/pages/supportticket/supportticket';
+import { adminGuard } from './guard/admin/admin-guard';
+import { travelerGuard } from './guard/traveler/traveler-guard';
+import { agentGuard } from './guard/agent/agent-guard';
 
 export const routes: Routes = [
   { path: '', component: LandingPage },
@@ -39,7 +42,9 @@ export const routes: Routes = [
   // Admin routes
   {
     path: 'admin',
+    canActivate: [adminGuard],
     children: [
+      { path: '', redirectTo: 'user', pathMatch: 'full' },
       { path: 'payment', component: PaymentComponent },
       { path: 'bookingwithpayments', component: BookingWithPayments },
       { path: 'userwithpayments', component: UserWithPayments },
@@ -59,6 +64,7 @@ export const routes: Routes = [
   {
     path: 'traveller',
     component: TravellerDashboardComponent,
+    canActivate: [travelerGuard],
     children: [
       { path: '', redirectTo: 'profile', pathMatch: 'full' },
       { path: 'profile', component: UserProfileComponent },
@@ -71,6 +77,7 @@ export const routes: Routes = [
   {
     path: 'agent',
     component: TravelAgentDashboardComponent,
+    canActivate: [agentGuard],
     children: [
       { path: '', redirectTo: 'packages', pathMatch: 'full' },
       { path: 'packages', component: PackageComponent },
