@@ -91,7 +91,7 @@ export const routes: Routes = [
   // Hotel-Manager
   {
     path: 'hotel-manager',
-    component: TravelAgentDashboardComponent,
+    // component: TravelAgentDashboardComponent,
     canActivate: [hotelManagerGuard],
     children: [
       // { path: '', redirectTo: 'hotedashboard', pathMatch: 'full' },
