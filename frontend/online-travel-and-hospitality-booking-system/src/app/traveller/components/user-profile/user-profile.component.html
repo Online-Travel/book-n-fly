@@ -1,0 +1,388 @@
+<!-- Navigation Bar -->
+<nav class="navbar navbar-expand-lg navbar-dark" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+  <div class="container">
+    <a class="navbar-brand d-flex align-items-center" href="#" (click)="navigateBack()">
+      <i class="fas fa-arrow-left me-2"></i>
+      Back to Dashboard
+    </a>
+    <div class="navbar-nav ms-auto">
+      <span class="navbar-text">
+        <i class="fas fa-user-circle me-1"></i>
+        User Profile
+      </span>
+    </div>
+  </div>
+</nav>
+
+<!-- Profile Header -->
+<div class="profile-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 2rem 0;">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-md-3 text-center">
+        <i class="fas fa-user-circle fa-5x" style="color: white;"></i>
+      </div>
+      <div class="col-md-9">
+        <h2 class="mb-2">{{ userEmail || 'User' }}</h2>
+        <p class="mb-1"><i class="fas fa-envelope me-2"></i>{{ userEmail || 'Not available' }}</p>
+        <p class="mb-0"><i class="fas fa-shield-alt me-2"></i>Verified User</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container my-5">
+  <!-- User Details Section -->
+  <div class="row mb-5">
+    <div class="col-12">
+      <div class="card shadow-sm" style="border: none; transition: transform 0.3s ease;">
+        <div class="card-header" style="background: linear-gradient(45deg, #f8f9fa, #e9ecef); border-bottom: 2px solid #dee2e6;">
+          <h4 class="mb-0">
+            <i class="fas fa-user me-2 text-primary"></i>
+            User Details
+          </h4>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="detail-row" style="border-bottom: 1px solid #f0f0f0; padding: 0.75rem 0;">
+                <strong>Email Address:</strong>
+                <span class="float-end">{{ userEmail || 'Not available' }}</span>
+              </div>
+              <div class="detail-row" style="border-bottom: 1px solid #f0f0f0; padding: 0.75rem 0;">
+                <strong>Status:</strong>
+                <span class="float-end">
+                  <span class="badge bg-success">Active</span>
+                </span>
+              </div>
+              <div class="detail-row" style="padding: 0.75rem 0;">
+                <strong>Account Type:</strong>
+                <span class="float-end">
+                  <span class="badge bg-primary">Verified User</span>
+                </span>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="detail-row" style="border-bottom: 1px solid #f0f0f0; padding: 0.75rem 0;">
+                <strong>Total Bookings:</strong>
+                <span class="float-end text-primary fw-bold">{{ bookings.length }}</span>
+              </div>
+              <div class="detail-row" style="border-bottom: 1px solid #f0f0f0; padding: 0.75rem 0;">
+                <strong>Total Itineraries:</strong>
+                <span class="float-end text-info fw-bold">{{ itineraries.length }}</span>
+              </div>
+              <div class="detail-row" style="padding: 0.75rem 0;">
+                <strong>Member Since:</strong>
+                <span class="float-end">2024</span>
+              </div>
+            </div>
+          </div>
+          <div class="mt-3">
+            <button class="btn btn-outline-danger btn-sm" (click)="onLogout()">
+              <i class="fas fa-sign-out-alt me-1"></i>
+              Logout
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- My Bookings Section -->
+  <div class="row mb-5">
+    <div class="col-12">
+      <div class="card shadow-sm" style="border: none; transition: transform 0.3s ease;">
+        <div class="card-header" style="background: linear-gradient(45deg, #f8f9fa, #e9ecef); border-bottom: 2px solid #dee2e6;">
+          <div class="d-flex justify-content-between align-items-center">
+            <h4 class="mb-0">
+              <i class="fas fa-calendar-check me-2 text-success"></i>
+              My Bookings
+            </h4>
+            <span class="badge bg-light text-dark">{{ bookings.length }} total</span>
+          </div>
+        </div>
+        <div class="card-body">
+          <div *ngIf="loadingBookings" class="text-center py-5">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-2 text-muted">Loading your bookings...</p>
+          </div>
+
+          <div *ngIf="!loadingBookings && displayedBookings.length === 0" class="text-center py-5">
+            <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+            <h5 class="text-muted">No bookings found</h5>
+            <p class="text-muted">You haven't made any bookings yet.</p>
+          </div>
+
+          <div *ngIf="!loadingBookings && displayedBookings.length > 0">
+            <div class="row">
+              <div class="col-md-6 mb-3" *ngFor="let booking of displayedBookings">
+                <div class="card h-100" style="border-left: 4px solid #667eea; transition: all 0.3s ease;" 
+                     onmouseover="this.style.backgroundColor='#f8f9fa'; this.style.borderLeftColor='#764ba2';"
+                     onmouseout="this.style.backgroundColor=''; this.style.borderLeftColor='#667eea';">
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                      <h6 class="card-title mb-0">#{{ booking.bookingId }}</h6>
+                      <span class="badge" [ngClass]="getStatusBadgeClass(booking.status)" style="font-size: 0.75rem; padding: 0.4rem 0.8rem;">
+                        {{ booking.status }}
+                      </span>
+                    </div>
+                    <p class="card-text text-muted small mb-2">
+                      <i class="fas fa-tag me-1"></i>{{ booking.type }}
+                    </p>
+                    <p class="card-text text-muted small mb-2">
+                      <i class="fas fa-id-card me-1"></i>Item ID: {{ booking.itemId }}
+                    </p>
+                    <div class="mt-3">
+                      <button 
+                        *ngIf="booking.status === 'SUCCESS' && booking.type === 'HOTEL'"
+                        class="btn btn-sm btn-outline-primary me-2"
+                        (click)="openReviewModal(booking)">
+                        <i class="fas fa-star me-1"></i>Add Review
+                      </button>
+                      <button 
+                        *ngIf="booking.status === 'PENDING'"
+                        class="btn btn-sm btn-warning">
+                        <i class="fas fa-credit-card me-1"></i>Proceed to Payment
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div *ngIf="bookings.length > 5" class="text-center mt-3">
+              <button class="btn btn-outline-primary" (click)="toggleShowAllBookings()">
+                <i class="fas" [ngClass]="showAllBookings ? 'fa-eye-slash' : 'fa-eye'"></i>
+                {{ showAllBookings ? 'Show Less' : 'Show More (' + (bookings.length - 5) + ' more)' }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- My Itineraries Section -->
+  <div class="row mb-5">
+    <div class="col-12">
+      <div class="card shadow-sm" style="border: none; transition: transform 0.3s ease;">
+        <div class="card-header" style="background: linear-gradient(45deg, #f8f9fa, #e9ecef); border-bottom: 2px solid #dee2e6;">
+          <div class="d-flex justify-content-between align-items-center">
+            <h4 class="mb-0">
+              <i class="fas fa-route me-2 text-warning"></i>
+              My Itineraries
+            </h4>
+            <span class="badge bg-light text-dark">{{ itineraries.length }} total</span>
+          </div>
+        </div>
+        <div class="card-body">
+          <div *ngIf="loadingItineraries" class="text-center py-5">
+            <div class="spinner-border text-info" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-2 text-muted">Loading your itineraries...</p>
+          </div>
+
+          <div *ngIf="!loadingItineraries && itineraries.length === 0" class="text-center py-5">
+            <i class="fas fa-route fa-3x text-muted mb-3"></i>
+            <h5 class="text-muted">No itineraries found</h5>
+            <p class="text-muted">You haven't created any itineraries yet.</p>
+          </div>
+
+          <div *ngIf="!loadingItineraries && itineraries.length > 0" class="row">
+            <div class="col-lg-4 col-md-6 mb-4" *ngFor="let itinerary of itineraries">
+              <div class="card h-100" style="border-left: 4px solid #667eea; transition: all 0.3s ease;"
+                   onmouseover="this.style.backgroundColor='#f8f9fa'; this.style.borderLeftColor='#764ba2';"
+                   onmouseout="this.style.backgroundColor=''; this.style.borderLeftColor='#667eea';">
+                <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                  <h6 class="mb-0">Itinerary #{{ itinerary.itineraryId }}</h6>
+                  <span class="badge" [ngClass]="getStatusBadgeClass(itinerary.status)" style="font-size: 0.75rem; padding: 0.4rem 0.8rem;">
+                    {{ itinerary.status }}
+                  </span>
+                </div>
+                <div class="card-body">
+                  <p class="text-muted small mb-2">Package ID: {{ itinerary.packageId }}</p>
+                  <p class="card-text small">{{ itinerary.customizationDetails }}</p>
+                  <div class="row text-center mb-3">
+                    <div class="col-6">
+                      <small class="text-muted d-block">Start Date</small>
+                      <strong class="small">{{ formatDate(itinerary.startDate) }}</strong>
+                    </div>
+                    <div class="col-6">
+                      <small class="text-muted d-block">End Date</small>
+                      <strong class="small">{{ formatDate(itinerary.endDate) }}</strong>
+                    </div>
+                  </div>
+                  <div class="row text-center">
+                    <div class="col-6">
+                      <small class="text-muted d-block">Travelers</small>
+                      <strong class="small">{{ itinerary.numberOfTravelers }}</strong>
+                    </div>
+                    <div class="col-6">
+                      <small class="text-muted d-block">Total Price</small>
+                      <strong class="small">{{ itinerary.totalPrice || 'TBD' }}</strong>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-footer bg-transparent">
+                  <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <button 
+                      class="btn btn-outline-primary btn-sm"
+                      (click)="openItineraryModal(itinerary)">
+                      <i class="fas fa-edit me-1"></i>Update
+                    </button>
+                    <button 
+                      class="btn btn-outline-danger btn-sm"
+                      (click)="deleteItinerary(itinerary)">
+                      <i class="fas fa-trash me-1"></i>Delete
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="text-center mt-3">
+            <button class="btn btn-primary">
+              <i class="fas fa-plus me-1"></i>
+              Create New Itinerary
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Review Modal -->
+<div class="modal fade" [class.show]="showReviewModal" [style.display]="showReviewModal ? 'block' : 'none'" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title">
+          <i class="fas fa-star me-2"></i>Add Review
+        </h5>
+        <button type="button" class="btn-close btn-close-white" (click)="closeReviewModal()"></button>
+      </div>
+      <form (ngSubmit)="submitReview()" #reviewNgForm="ngForm">
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label">Rating</label>
+            <select class="form-select" [(ngModel)]="reviewForm.rating" name="rating" required>
+              <option value="1">1 Star</option>
+              <option value="2">2 Stars</option>
+              <option value="3">3 Stars</option>
+              <option value="4">4 Stars</option>
+              <option value="5">5 Stars</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Comment</label>
+            <textarea 
+              class="form-control" 
+              rows="4" 
+              [(ngModel)]="reviewForm.comment" 
+              name="comment" 
+              placeholder="Share your experience..."
+              required></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeReviewModal()">Cancel</button>
+          <button 
+            type="submit" 
+            class="btn btn-primary"
+            [disabled]="submittingReview || !reviewNgForm.valid">
+            <span *ngIf="submittingReview" class="spinner-border spinner-border-sm me-2"></span>
+            <i *ngIf="!submittingReview" class="fas fa-paper-plane me-2"></i>
+            Submit Review
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Itinerary Modal -->
+<div class="modal fade" [class.show]="showItineraryModal" [style.display]="showItineraryModal ? 'block' : 'none'" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-info text-white">
+        <h5 class="modal-title">
+          <i class="fas fa-route me-2"></i>{{ editingItinerary ? 'Update' : 'Create' }} Itinerary
+        </h5>
+        <button type="button" class="btn-close btn-close-white" (click)="closeItineraryModal()"></button>
+      </div>
+      <form (ngSubmit)="saveItinerary()" #itineraryNgFormRef="ngForm">
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Package ID</label>
+              <input 
+                type="number" 
+                class="form-control" 
+                [(ngModel)]="itineraryForm.packageId" 
+                name="packageId" 
+                required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Number of Travelers</label>
+              <input 
+                type="number" 
+                class="form-control" 
+                [(ngModel)]="itineraryForm.numberOfTravelers" 
+                name="numberOfTravelers" 
+                min="1" 
+                required>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Start Date</label>
+              <input 
+                type="date" 
+                class="form-control" 
+                [(ngModel)]="itineraryForm.startDate" 
+                name="startDate" 
+                required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">End Date</label>
+              <input 
+                type="date" 
+                class="form-control" 
+                [(ngModel)]="itineraryForm.endDate" 
+                name="endDate" 
+                required>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Customization Details</label>
+            <textarea 
+              class="form-control" 
+              rows="4" 
+              [(ngModel)]="itineraryForm.customizationDetails" 
+              name="customizationDetails" 
+              placeholder="Describe your travel preferences and requirements..."
+              required></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeItineraryModal()">Cancel</button>
+          <button 
+            type="submit" 
+            class="btn btn-info"
+            [disabled]="savingItinerary || !itineraryNgFormRef.valid">
+            <span *ngIf="savingItinerary" class="spinner-border spinner-border-sm me-2"></span>
+            <i *ngIf="!savingItinerary" class="fas fa-save me-2"></i>
+            {{ editingItinerary ? 'Update' : 'Create' }} Itinerary
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Backdrop -->
+<div *ngIf="showReviewModal || showItineraryModal" class="modal-backdrop fade show"></div>

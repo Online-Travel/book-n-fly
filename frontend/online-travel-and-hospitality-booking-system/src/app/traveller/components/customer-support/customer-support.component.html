@@ -1,0 +1,256 @@
+<!-- support-ticket.component.html -->
+
+<!-- Bootstrap Navigation Bar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
+  <div class="container">
+    <a class="navbar-brand" href="#">
+      <i class="bi bi-headset"></i>
+      Support Center
+    </a>
+    
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <button 
+            class="btn btn-outline-light"
+            (click)="navigateToDashboard()">
+            <i class="bi bi-arrow-left"></i>
+            Go to Dashboard
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+      <!-- Page Header -->
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+          <h2 class="h3 mb-1">
+            <i class="bi bi-ticket-perforated text-primary me-2"></i>
+            My Support Tickets
+          </h2>
+          <p class="text-muted mb-0">Manage and track your support requests</p>
+        </div>
+        <button 
+          class="btn btn-primary btn-lg shadow-sm" 
+          (click)="showCreateForm = !showCreateForm"
+          [disabled]="loading">
+          <i class="bi bi-plus-circle me-2"></i>
+          New Ticket
+        </button>
+      </div>
+
+      <!-- Create New Ticket Card -->
+      <div class="card border-0 shadow-sm mb-4" *ngIf="showCreateForm">
+        <div class="card-header bg-primary text-white py-3">
+          <h5 class="mb-0 fw-bold">
+            <i class="bi bi-plus-circle me-2"></i>
+            Create New Support Ticket
+          </h5>
+        </div>
+        <div class="card-body p-4">
+          <form [formGroup]="ticketForm" (ngSubmit)="createTicket()">
+            <div class="mb-4">
+              <label for="issue" class="form-label fw-semibold">Issue Description *</label>
+              <textarea 
+                class="form-control form-control-lg" 
+                id="issue"
+                formControlName="issue"
+                rows="5"
+                placeholder="Please describe your issue in detail. Include any error messages, steps to reproduce, or relevant information..."
+                [class.is-invalid]="ticketForm.get('issue')?.invalid && ticketForm.get('issue')?.touched">
+              </textarea>
+              <div class="invalid-feedback" *ngIf="ticketForm.get('issue')?.invalid && ticketForm.get('issue')?.touched">
+                <i class="bi bi-exclamation-circle me-1"></i>
+                Issue description is required (maximum 1000 characters)
+              </div>
+              <div class="form-text mt-2">
+                <i class="bi bi-info-circle me-1"></i>
+                {{ ticketForm.get('issue')?.value?.length || 0 }}/1000 characters
+              </div>
+            </div>
+            <div class="d-flex gap-3">
+              <button 
+                type="submit" 
+                class="btn btn-success btn-lg px-4"
+                [disabled]="ticketForm.invalid || loading">
+                <i class="bi bi-send me-2"></i>
+                <span *ngIf="!loading">Submit Ticket</span>
+                <span *ngIf="loading">
+                  <span class="spinner-border spinner-border-sm me-2"></span>
+                  Submitting...
+                </span>
+              </button>
+              <button 
+                type="button" 
+                class="btn btn-outline-secondary btn-lg px-4"
+                (click)="showCreateForm = false; ticketForm.reset()">
+                <i class="bi bi-x-lg me-2"></i>
+                Cancel
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Loading Spinner -->
+      <div class="text-center py-5" *ngIf="loading && tickets.length === 0">
+        <div class="spinner-border text-primary mb-3" style="width: 3rem; height: 3rem;"></div>
+        <p class="text-muted">Loading your support tickets...</p>
+      </div>
+
+      <!-- No Tickets State -->
+      <div class="col-12" *ngIf="!loading && tickets.length === 0">
+        <div class="card border-0 shadow-sm">
+          <div class="card-body text-center py-5">
+            <div class="mb-4">
+              <i class="bi bi-inbox display-1 text-muted"></i>
+            </div>
+            <h4 class="text-muted mb-3">No Support Tickets Found</h4>
+            <p class="text-muted mb-4">You haven't created any support tickets yet. Need help with something?</p>
+            <button 
+              class="btn btn-primary btn-lg px-4"
+              (click)="showCreateForm = true">
+              <i class="bi bi-plus-circle me-2"></i>
+              Create Your First Ticket
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tickets Grid -->
+      <div class="row" *ngIf="!loading && tickets.length > 0">
+        <div class="col-12">
+          <div class="row g-4">
+            <div class="col-12" *ngFor="let ticket of tickets; trackBy: trackByTicketId">
+              <div class="card border-0 shadow-sm h-100 ticket-card">
+                <!-- Card Header -->
+                <div class="card-header bg-light border-bottom-0 py-3">
+                  <div class="row align-items-center">
+                    <div class="col-md-6">
+                      <div class="d-flex align-items-center">
+                        <h6 class="mb-0 me-3 fw-bold">
+                          <i class="bi bi-hash text-primary"></i>
+                          {{ ticket.ticketId }}
+                        </h6>
+                        <span 
+                          class="badge rounded-pill fs-6 px-3 py-2" 
+                          [ngClass]="getStatusBadgeClass(ticket.status!)">
+                          <i class="bi bi-circle-fill me-1" style="font-size: 0.5em;"></i>
+                          {{ ticket.status | titlecase }}
+                        </span>
+                      </div>
+                    </div>
+                    <div class="col-md-6 text-md-end mt-2 mt-md-0">
+                      <div class="btn-group" role="group">
+                        <button 
+                          class="btn btn-outline-primary btn-sm"
+                          (click)="startEdit(ticket)"
+                          [disabled]="editMode || loading || typeof ticket.ticketId !== 'number'">
+                          <i class="bi bi-pencil me-1"></i>
+                          Edit
+                        </button>
+                        <button 
+                          class="btn btn-outline-danger btn-sm"
+                          (click)="deleteTicket(ticket.ticketId!)"
+                          [disabled]="loading || typeof ticket.ticketId !== 'number'">
+                          <i class="bi bi-trash me-1"></i>
+                          Delete
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Card Body -->
+                <div class="card-body p-4">
+                  <!-- Normal View -->
+                  <div *ngIf="!editMode || selectedTicket?.ticketId !== ticket.ticketId">
+                    <div class="mb-4">
+                      <h6 class="text-muted mb-2">Issue Description:</h6>
+                      <p class="mb-0 lh-lg">{{ ticket.issue }}</p>
+                    </div>
+                    <div class="row text-muted">
+                      <div class="col-md-4 mb-3">
+                        <div class="d-flex align-items-center">
+                          <i class="bi bi-calendar3 me-2 text-primary"></i>
+                          <div>
+                            <small class="d-block fw-semibold">Created On</small>
+                            <small>{{ formatDate(ticket.createdAt!) }}</small>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-4 mb-3" *ngIf="ticket.assignedAgentId">
+                        <div class="d-flex align-items-center">
+                          <i class="bi bi-person-badge me-2 text-success"></i>
+                          <div>
+                            <small class="d-block fw-semibold">Assigned Agent</small>
+                            <small>Agent #{{ ticket.assignedAgentId }}</small>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-4 mb-3" *ngIf="!ticket.assignedAgentId">
+                        <div class="d-flex align-items-center">
+                          <i class="bi bi-clock me-2 text-warning"></i>
+                          <div>
+                            <small class="d-block fw-semibold">Status</small>
+                            <small>Awaiting Assignment</small>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Edit Mode -->
+                  <div *ngIf="editMode && selectedTicket?.ticketId === ticket.ticketId">
+                    <div class="mb-4">
+                      <label class="form-label fw-semibold">Update Issue Description</label>
+                      <textarea 
+                        class="form-control form-control-lg" 
+                        [(ngModel)]="selectedTicket!.issue"
+                        rows="5"
+                        maxlength="1000"
+                        placeholder="Update your issue description...">
+                      </textarea>
+                      <div class="form-text mt-2">
+                        <i class="bi bi-info-circle me-1"></i>
+                        {{ selectedTicket?.issue?.length || 0 }}/1000 characters
+                      </div>
+                    </div>
+                    <div class="d-flex gap-3">
+                      <button 
+                        class="btn btn-success px-4"
+                        (click)="updateTicket(selectedTicket!.ticketId!, selectedTicket!.issue!)"
+                        [disabled]="!selectedTicket?.issue || loading || typeof selectedTicket?.ticketId !== 'number'">
+                        <i class="bi bi-check-lg me-2"></i>
+                        <span *ngIf="!loading">Save Changes</span>
+                        <span *ngIf="loading">
+                          <span class="spinner-border spinner-border-sm me-2"></span>
+                          Saving...
+                        </span>
+                      </button>
+                      <button 
+                        class="btn btn-outline-secondary px-4"
+                        (click)="cancelEdit()">
+                        <i class="bi bi-x-lg me-2"></i>
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
