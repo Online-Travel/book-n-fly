@@ -1,10 +1,11 @@
 package OnlineTravelBooking.package_service.repository;
 
-import OnlineTravelBooking.package_service.model.Itinerary;
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import OnlineTravelBooking.package_service.model.Itinerary;
 
 @Repository
 public interface ItineraryRepository extends JpaRepository<Itinerary, Long> {
@@ -17,7 +18,7 @@ public interface ItineraryRepository extends JpaRepository<Itinerary, Long> {
 
 
     // Find itineraries by package ID
-    List<Itinerary> findByPackageId(Long packageId);
+       List<Itinerary> findByPackageIdIn(List<Long> packageIds);
 
     // Find itineraries by user and status
     List<Itinerary> findByUserIdAndStatus(Long userId, String status);
