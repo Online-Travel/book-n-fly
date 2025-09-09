@@ -32,6 +32,8 @@ import { SupportTicketComponent } from './TravelAgent-Dashboard/pages/supporttic
 import { adminGuard } from './guard/admin/admin-guard';
 import { travelerGuard } from './guard/traveler/traveler-guard';
 import { agentGuard } from './guard/agent/agent-guard';
+import { hotelManagerGuard } from './guard/hotel-manager/hotel-manager-guard';
+import { HotelManagerDashboard } from './hotel-manager/pages/hotel-manager-dashboard/hotel-manager-dashboard';
 
 export const routes: Routes = [
   { path: '', component: LandingPage },
@@ -83,6 +85,17 @@ export const routes: Routes = [
       { path: 'packages', component: PackageComponent },
       { path: 'itineraries', component: ItinerariesComponent },
       { path: 'supportticket', component: SupportTicketComponent }
+    ]
+  },
+
+  // Hotel-Manager
+  {
+    path: 'hotel-manager',
+    component: TravelAgentDashboardComponent,
+    // canActivate: [hotelManagerGuard],
+    children: [
+      // { path: '', redirectTo: 'hotedashboard', pathMatch: 'full' },
+      { path: '', component: HotelManagerDashboard },
     ]
   },
 
