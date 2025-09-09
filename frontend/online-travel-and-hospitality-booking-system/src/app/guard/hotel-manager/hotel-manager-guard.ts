@@ -9,7 +9,7 @@ export const hotelManagerGuard: CanActivateFn = (route, state) => {
   const token = authService.getToken();
   const role = authService.getRole();
 
-  if (token && role === 'TRAVEL_AGENT') {
+  if (token && role === 'HOTEL_MANAGER') {
     return true;
   } else {
     router.navigate(['/home']);
