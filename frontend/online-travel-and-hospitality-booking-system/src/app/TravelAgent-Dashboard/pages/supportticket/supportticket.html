@@ -1,0 +1,61 @@
+<div class="container my-4">
+  <h3 class="mb-3 text-primary">
+    <i class="bi bi-life-preserver me-2"></i> My Assigned Support Tickets
+  </h3>
+
+  <!-- Loading Spinner -->
+  <div *ngIf="loading" class="text-center my-4">
+    <div class="spinner-border text-primary"></div>
+  </div>
+
+  <!-- No Tickets -->
+  <div *ngIf="!loading && tickets.length === 0" class="alert alert-info">
+    No assigned tickets found.
+  </div>
+
+  <!-- Tickets Table -->
+  <div *ngIf="tickets.length > 0" class="table-responsive">
+    <table class="table table-striped table-hover align-middle text-center">
+      <thead class="table-dark">
+        <tr>
+          <th>ID</th>
+          <th>User Id</th>
+          <th>Issue</th>
+          <th>Status</th>
+          <th>Assigned Agent</th>
+          <th>Created Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let ticket of tickets">
+          <td>{{ ticket.ticketId }}</td>
+          <td>{{ ticket.userId }}</td>
+          <td class="fw-semibold">{{ ticket.issue }}</td>
+          <td>
+            <span
+              class="badge"
+              [ngClass]="{
+                'bg-warning text-dark': ticket.status === 'OPEN' || ticket.status === 'IN_PROGRESS',
+                'bg-success': ticket.status === 'CLOSED'
+              }"
+            >
+              {{ ticket.status }}
+            </span>
+          </td>
+          <td>{{ ticket.assignedAgentId }}</td>
+          <td>{{ ticket.createdAt | date: 'short' }}</td>
+          <td>
+            <button
+              class="btn btn-sm btn-outline-success"
+              (click)="closeTicket(ticket.ticketId)"
+              [disabled]="ticket.status === 'CLOSED'"
+            >
+              <i class="bi bi-check-circle"></i> Close
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
