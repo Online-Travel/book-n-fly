@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { BookingService } from '../../services/booking.service';
 import { Booking } from '../../models/booking.model';
 import { BookingNavbar } from '../booking-navbar/booking-navbar';
+import { AuthService } from '../../../auth/auth.service';
 
 @Component({
   selector: 'app-bookings',
@@ -19,7 +20,7 @@ export class Bookings {
   bookingId: number | null = null;
   error: string | null = null;
 
-  constructor(private bookingService: BookingService) {}
+  constructor(private bookingService: BookingService, public authService: AuthService) {}
 
   ngOnInit(): void {
     this.loadAll();

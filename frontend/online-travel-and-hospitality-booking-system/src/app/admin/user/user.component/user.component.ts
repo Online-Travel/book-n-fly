@@ -5,13 +5,14 @@ import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { ChangeDetectorRef } from '@angular/core';
+import { NavbarComponent } from "../../navbar.component/navbar.component";
 
 declare var bootstrap: any;
 
 @Component({
   selector: 'app-user.component',
   standalone:true,
-  imports: [CommonModule,FormsModule],
+  imports: [CommonModule, FormsModule, NavbarComponent],
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.css']
 })
