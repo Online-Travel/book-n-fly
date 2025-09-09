@@ -9,7 +9,7 @@ export const agentGuard: CanActivateFn = (route, state) => {
   const token = authService.getToken();
   const role = authService.getRole();
 
-  if (token && role === 'TRAVEL_AGENT') { // Adjust role string if needed
+  if (token && role === 'TRAVEL_AGENT') {
     return true;
   } else {
     router.navigate(['/home']);
