@@ -1,0 +1,146 @@
+<app-hotel-manager-navbar></app-hotel-manager-navbar>
+
+<div class="container-fluid">
+  <div class="row">
+    <!-- Hotel List Table (Left Side) -->
+    <div class="col-md-8">
+      <h2>My Hotels</h2>
+      <div class="table-responsive">
+        <table class="table table-striped table-sm">
+          <thead>
+            <tr>
+              <th scope="col">Hotel Id</th>
+              <th scope="col">Name</th>
+              <th scope="col">Location</th>
+              <th scope="col">Price Per Night</th>
+              <th scope="col">Rating</th>
+              <th scope="col">Rooms Available</th>
+              <th scope="col">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (hotel of hotels; track $index) {
+
+            <tr>
+              <td>{{ hotel.hotelId }}</td>
+              <td>{{ hotel.name }}</td>
+              <td>{{ hotel.location }}</td>
+              <td>{{ hotel.pricePerNight }}</td>
+              <td>{{ hotel.rating }}</td>
+              <td>{{ hotel.roomsAvailable }}</td>
+              <td>
+                <button
+                  class="btn btn-primary btn-sm"
+                  (click)="editHotel(hotel)"
+                >
+                  Edit
+                </button>
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      <button class="btn btn-success" (click)="createNewHotel()">
+        Create New Hotel
+      </button>
+    </div>
+
+    <!-- Hotel Form (Right Side) -->
+    <div class="col-md-4">
+      <h2>{{ isEditMode ? "Edit Hotel" : "Create New Hotel" }}</h2>
+      <form (ngSubmit)="onSubmit()" #hotelForm="ngForm">
+        <div class="mb-3">
+          <label for="name" class="form-label">Name</label>
+          <input
+            type="text"
+            class="form-control"
+            id="name"
+            [(ngModel)]="currentHotel.name"
+            name="name"
+            required
+          />
+        </div>
+        <div class="mb-3">
+          <label for="location" class="form-label">Location</label>
+          <input
+            type="text"
+            class="form-control"
+            id="location"
+            [(ngModel)]="currentHotel.location"
+            name="location"
+            required
+          />
+        </div>
+        <div class="mb-3">
+          <label for="pricePerNight" class="form-label">Price Per Night</label>
+          <input
+            type="number"
+            class="form-control"
+            id="pricePerNight"
+            [(ngModel)]="currentHotel.pricePerNight"
+            name="pricePerNight"
+            required
+          />
+        </div>
+        <div class="mb-3">
+          <label for="rating" class="form-label">Rating</label>
+          <input
+            type="number"
+            class="form-control"
+            id="rating"
+            [(ngModel)]="currentHotel.rating"
+            name="rating"
+            step="0.1"
+            min="0"
+            max="5"
+          />
+        </div>
+        <div class="mb-3">
+          <label for="roomsAvailable" class="form-label">Rooms Available</label>
+          <input
+            type="number"
+            class="form-control"
+            id="roomsAvailable"
+            [(ngModel)]="currentHotel.roomsAvailable"
+            name="roomsAvailable"
+            required
+          />
+        </div>
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="!hotelForm.form.valid"
+        >
+          {{ isEditMode ? "Update Hotel" : "Create Hotel" }}
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+<!-- <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+  <div class="table-responsive small">
+    <table class="table table-striped table-sm">
+      <thead>
+        <tr>
+          <th scope="col">Hotel Id</th>
+          <th scope="col">Name</th>
+          <th scope="col">Location</th>
+          <th scope="col">Price Per Night</th>
+          <th scope="col">Rating</th>
+          <th scope="col">Rooms Available</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>Taj Hotel</td>
+          <td>Mumbai</td>
+          <td>8000</td>
+          <td>4.5</td>
+          <td>800</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div> -->

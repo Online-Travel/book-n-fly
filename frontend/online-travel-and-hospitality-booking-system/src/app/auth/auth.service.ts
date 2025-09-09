@@ -127,4 +127,16 @@ export class AuthService {
     }
     this.currentUserSubject.next(null);
   }
+  
+  // Map roles to dashboard routes - make sure this matches your actual routes
+  getDashboardRouteForRole(role: string | null): string | null {
+    switch (role?.toLowerCase()) {
+      case 'admin': return '/admin';
+      case 'traveller': return '/traveller';
+      case 'travel agent': return '/agent';
+      case 'hotel manager': return '/hotel-manager';
+      default: return null; // Unknown role
+    }
+  }
+  
 }
