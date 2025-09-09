@@ -1,0 +1,153 @@
+/* Root styling */
+:host {
+  display: block;
+  padding: 1.5rem;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: #f8fbff;
+  color: #222;
+}
+
+/* Page Heading */
+h2 {
+  text-align: center;
+  font-size: 1.9rem;
+  margin-bottom: 1.5rem;
+  color: #0d47a1;
+  font-weight: 600;
+}
+
+h3 {
+  color: #1565c0;
+  margin-top: 1rem;
+}
+
+/* Controls Section */
+.controls {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: #e3f2fd;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+.controls .row {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+}
+
+/* Inputs */
+.controls input[type="number"] {
+  flex: 1;
+  min-width: 160px;
+  padding: 0.55rem 0.75rem;
+  border: 1px solid #90caf9;
+  border-radius: 6px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.controls input[type="number"]:focus {
+  border-color: #1976d2;
+  box-shadow: 0 0 0 3px rgba(25,118,210,0.2);
+}
+
+/* Buttons */
+.controls button {
+  padding: 0.55rem 1.1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  background: #1976d2;
+  color: #fff;
+  transition: background 0.25s ease, transform 0.1s;
+}
+
+.controls button:hover {
+  background: #1565c0;
+  transform: translateY(-1px);
+}
+
+/* Variant Buttons */
+.controls button:nth-child(2) {
+  background: #64b5f6;
+}
+.controls button:nth-child(2):hover {
+  background: #42a5f5;
+}
+
+.controls button:nth-child(3) {
+  background: #0d47a1;
+}
+.controls button:nth-child(3):hover {
+  background: #08306b;
+}
+
+/* Status messages */
+.err {
+  color: #d32f2f;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+div[ng-reflect-ng-if="Loading..."],
+[ng-reflect-ng-if="Loading..."] {
+  color: #1565c0;
+  font-weight: 500;
+  margin-bottom: 1rem;
+}
+
+/* Selected Ticket */
+pre {
+  background: #f1f8ff;
+  padding: 1rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  overflow-x: auto;
+  border: 1px solid #bbdefb;
+}
+
+/* Table styling */
+.tbl {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1.2rem;
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+
+.tbl th, .tbl td {
+  padding: 0.75rem 1rem;
+  text-align: center;
+  border-bottom: 1px solid #e3f2fd;
+}
+
+.tbl th {
+  background: #1976d2;
+  color: #fff;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+}
+
+.tbl tr:nth-child(even) {
+  background: #f1f8ff;
+}
+
+.tbl tr:hover {
+  background: #e3f2fd;
+  transition: background 0.2s;
+}
+
+/* Empty state */
+em {
+  display: block;
+  text-align: center;
+  margin-top: 1.5rem;
+  color: #607d8b;
+  font-style: italic;
+}

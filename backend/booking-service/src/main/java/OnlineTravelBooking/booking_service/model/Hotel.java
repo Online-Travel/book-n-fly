@@ -27,4 +27,6 @@ public class Hotel {
     private Double rating;
 
     private Double pricePerNight;
+
+    private Long userId;
 }

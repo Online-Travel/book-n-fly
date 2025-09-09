@@ -1,0 +1,140 @@
+/* Page container */
+:host {
+  display: block;
+  padding: 1.5rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #222;
+  background: #f9fbff;
+}
+
+/* Heading */
+h2 {
+  text-align: center;
+  font-size: 1.8rem;
+  margin-bottom: 1.2rem;
+  color: #0d47a1;
+  font-weight: 600;
+}
+
+/* Controls section */
+.controls {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: #e3f2fd;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+.controls .row {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.controls input[type="number"] {
+  flex: 1;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #90caf9;
+  border-radius: 6px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.controls input[type="number"]:focus {
+  border-color: #1976d2;
+  box-shadow: 0 0 0 3px rgba(25,118,210,0.2);
+}
+
+.controls button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.25s ease, transform 0.1s;
+}
+
+.controls button:hover {
+  transform: translateY(-1px);
+}
+
+.controls button:nth-child(2) {
+  background: #1976d2;
+  color: white;
+}
+
+.controls button:nth-child(2):hover {
+  background: #1565c0;
+}
+
+.controls button:nth-child(3) {
+  background: #64b5f6;
+  color: white;
+}
+
+.controls button:nth-child(3):hover {
+  background: #42a5f5;
+}
+
+.controls .row button:last-child {
+  background: #0d47a1;
+  color: #fff;
+}
+.controls .row button:last-child:hover {
+  background: #08306b;
+}
+
+/* Loading and error messages */
+.err {
+  color: #d32f2f;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+[ng-reflect-ng-if="Loading..."],
+div[ng-reflect-ng-if="Loading..."] {
+  color: #1565c0;
+  font-weight: 500;
+  margin-bottom: 1rem;
+}
+
+/* Table styling */
+.tbl {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+
+.tbl th, .tbl td {
+  padding: 0.75rem 1rem;
+  text-align: center;
+  border-bottom: 1px solid #e3f2fd;
+}
+
+.tbl th {
+  background: #1976d2;
+  color: #fff;
+  font-weight: 600;
+}
+
+.tbl tr:nth-child(even) {
+  background: #f1f8ff;
+}
+
+.tbl tr:hover {
+  background: #e3f2fd;
+  transition: background 0.2s;
+}
+
+/* No reviews */
+em {
+  display: block;
+  text-align: center;
+  margin-top: 1.5rem;
+  color: #607d8b;
+  font-style: italic;
+}

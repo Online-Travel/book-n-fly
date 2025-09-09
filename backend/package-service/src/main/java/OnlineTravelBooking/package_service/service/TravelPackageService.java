@@ -1,9 +1,9 @@
 package OnlineTravelBooking.package_service.service;
 
-import OnlineTravelBooking.package_service.model.TravelPackage;
-
 import java.util.List;
 import java.util.Optional;
+
+import OnlineTravelBooking.package_service.model.TravelPackage;
 
 public interface TravelPackageService {
 
@@ -17,7 +17,11 @@ public interface TravelPackageService {
 
     TravelPackage updatePackage(Long id, TravelPackage travelPackage);
 
-    void deletePackage(Long id);
+    Double getPackagePrice(long packageId);
+
+    TravelPackage makePackageInactive(Long id);
+
+    TravelPackage makePackageActive(Long id);
 
     void hardDeletePackage(Long id);
 

@@ -1,24 +1,23 @@
 package OnlineTravelBooking.package_service.service.impl;
 
-
-import OnlineTravelBooking.package_service.dto.FlightDTO;
-import OnlineTravelBooking.package_service.dto.HotelDTO;
-import OnlineTravelBooking.package_service.model.TravelPackage;
-import OnlineTravelBooking.package_service.repository.TravelPackageRepository;
-import OnlineTravelBooking.package_service.service.TravelPackageService;
-import OnlineTravelBooking.package_service.utils.JwtUtil;
-import lombok.extern.slf4j.Slf4j;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import OnlineTravelBooking.package_service.feignclient.HotelClient;
-import OnlineTravelBooking.package_service.feignclient.FlightClient;
-
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import OnlineTravelBooking.package_service.dto.FlightDTO;
+import OnlineTravelBooking.package_service.dto.HotelDTO;
+import OnlineTravelBooking.package_service.feignclient.FlightClient;
+import OnlineTravelBooking.package_service.feignclient.HotelClient;
+import OnlineTravelBooking.package_service.model.TravelPackage;
+import OnlineTravelBooking.package_service.repository.TravelPackageRepository;
+import OnlineTravelBooking.package_service.service.TravelPackageService;
+import OnlineTravelBooking.package_service.utils.JwtUtil;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
@@ -31,7 +30,7 @@ public class TravelPackageServiceImpl implements TravelPackageService {
 
     @Autowired
     private HotelClient hotelClient;
-    
+
     @Autowired
     private JwtUtil jwtUtil;
 
@@ -55,59 +54,43 @@ public class TravelPackageServiceImpl implements TravelPackageService {
     @Override
     public TravelPackage savePackage(String token, TravelPackage travelPackage) {
         travelPackage.setIsActive(true);
-
-        String destination = travelPackage.getDestination();
         travelPackage.setCreatedByAgentId(jwtUtil.extractUserId(token));
 
-        // Fetch hotels and flights from other services
-        List<HotelDTO> hotels=new ArrayList<>();
-        List<FlightDTO> flights=new ArrayList<>();
+        String destination = travelPackage.getDestination();
+        List<HotelDTO> hotels = new ArrayList<>();
+        List<FlightDTO> flights = new ArrayList<>();
+
         try {
             hotels = hotelClient.searchHotels(destination, null, null, null);
-            flights = flightClient.searchFlights(null, destination, null, null, null, true);
-            System.out.println(hotels);
-            System.out.println(flights);
-        }
-        catch (Exception e){
-            System.err.println("Error in fetching the hotel"+e.getMessage());
+            flights = flightClient.searchFlights(null, null, destination, null, null, true);
+        } catch (Exception e) {
+            System.err.println("Error fetching hotels/flights: " + e.getMessage());
         }
 
-        if (hotels.isEmpty()) {
-            System.err.println("No hotels found for destination: " + destination);
-            // Create package without hotel (set empty list)
-            travelPackage.setIncludedHotelIds(new ArrayList<>());
-
-        } else {
-            // Pick the cheapest hotel
+        if (!hotels.isEmpty()) {
             HotelDTO bestHotel = hotels.stream()
                     .min(Comparator.comparingDouble(HotelDTO::getPricePerNight))
-                    .orElse(hotels.get(0)); // Fallback to first hotel
+                    .orElse(hotels.get(0));
             travelPackage.setIncludedHotelIds(List.of(bestHotel.getHotelId()));
+        } else {
+            travelPackage.setIncludedHotelIds(new ArrayList<>());
         }
 
-        // Handle empty flight list
-        if (flights.isEmpty()) {
-            System.err.println("No flights found for destination: " + destination);
-            //Create package without flight (set empty list)
-            travelPackage.setIncludedFlightIds(new ArrayList<>());
-
-        } else {
-            // Pick the cheapest flight
+        if (!flights.isEmpty()) {
             FlightDTO bestFlight = flights.stream()
                     .min(Comparator.comparingDouble(FlightDTO::getPrice))
-                    .orElse(flights.get(0)); // Fallback to first flight
+                    .orElse(flights.get(0));
             travelPackage.setIncludedFlightIds(List.of(bestFlight.getFlightId()));
+        } else {
+            travelPackage.setIncludedFlightIds(new ArrayList<>());
         }
 
-        // Ensure activities are provided
         if (travelPackage.getActivities() == null || travelPackage.getActivities().isEmpty()) {
             throw new IllegalArgumentException("Activities cannot be null or empty.");
         }
 
         return repo.save(travelPackage);
-
     }
-
 
     @Override
     public Optional<TravelPackage> getPackageById(Long id) {
@@ -121,6 +104,7 @@ public class TravelPackageServiceImpl implements TravelPackageService {
 
         existing.setName(travelPackage.getName());
         existing.setPrice(travelPackage.getPrice());
+        existing.setDescription(travelPackage.getDescription());
         existing.setDestination(travelPackage.getDestination());
         existing.setActivities(travelPackage.getActivities());
         existing.setDurationDays(travelPackage.getDurationDays());
@@ -129,11 +113,25 @@ public class TravelPackageServiceImpl implements TravelPackageService {
     }
 
     @Override
-    public void deletePackage(Long id) {
-        TravelPackage pkg = repo.findById(id)
-                .orElseThrow(() -> new RuntimeException("Package not found"));
-        pkg.setIsActive(false);
-        repo.save(pkg);
+    public TravelPackage makePackageInactive(Long id) {
+        Optional<TravelPackage> optionalPkg = repo.findById(id);
+        if (optionalPkg.isPresent()) {
+            TravelPackage pkg = optionalPkg.get();
+            pkg.setIsActive(false);
+            return repo.save(pkg);
+        }
+        return null;
+    }
+
+    @Override
+    public TravelPackage makePackageActive(Long id) {
+        Optional<TravelPackage> optionalPkg = repo.findById(id);
+        if (optionalPkg.isPresent()) {
+            TravelPackage pkg = optionalPkg.get();
+            pkg.setIsActive(true);
+            return repo.save(pkg);
+        }
+        return null;
     }
 
     @Override
@@ -146,7 +144,6 @@ public class TravelPackageServiceImpl implements TravelPackageService {
         return repo.findByDestinationContainingIgnoreCase(destination);
     }
 
-
     @Override
     public List<TravelPackage> getPackagesByPriceRange(Double minPrice, Double maxPrice) {
         return repo.findAll().stream()
@@ -154,6 +151,13 @@ public class TravelPackageServiceImpl implements TravelPackageService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public Double getPackagePrice(long packageId) {
+        return repo.findById(packageId)
+                   .map(TravelPackage::getPrice)
+                   .orElse(null);
+    }
+    
     @Override
     public List<TravelPackage> getPackagesByAgent(Long agentId) {
         return repo.findAll().stream()

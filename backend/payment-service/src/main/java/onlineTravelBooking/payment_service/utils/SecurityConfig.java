@@ -25,6 +25,7 @@ public class SecurityConfig {
                         // Public endpoints (health checks, discovery)
                         .requestMatchers("/actuator/**", "/health/**","/eureka/**").permitAll()
 
+                        .requestMatchers("/payments/create-order").permitAll()
                         // Payment endpoints with role-based access
                         .requestMatchers("/payments/greet").hasRole("ADMIN")
                         .requestMatchers("/payments/create/**").hasRole("TRAVELER")

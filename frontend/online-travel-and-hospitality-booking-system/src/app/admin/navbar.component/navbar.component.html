@@ -1,0 +1,8 @@
+<nav class="navbar">
+  <button (click)="goToUser()">User</button>
+  <button (click)="goToBooking()">Booking</button>
+  <button (click)="goToPackage()">Package</button>
+  <button (click)="goToPayment()">Payment</button>
+  <button (click)="goToReview()">Review</button>
+  <button *ngIf="authService.isLoggedIn()" (click)="logout()">Logout</button>
+</nav>

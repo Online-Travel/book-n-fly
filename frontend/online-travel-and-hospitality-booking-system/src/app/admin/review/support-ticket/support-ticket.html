@@ -1,0 +1,57 @@
+<!-- src/app/review/ui/ticket-list.component.html -->
+ <app-review-navbar></app-review-navbar>
+<h2>Support Tickets</h2>
+
+<div class="controls">
+  <div class="row">
+    <input type="number" [(ngModel)]="ticketId" placeholder="Ticket ID" />
+    <button (click)="searchById()">Get Ticket</button>
+    <button (click)="reset()">Reset</button>
+  </div>
+
+  <div class="row" *ngIf="auth.getRole?.() === 'ADMIN'">
+    <button (click)="loadAllForAdmin()">Load All (Admin)</button>
+    <button (click)="loadOpenForAdmin()">Load Open (Admin)</button>
+  </div>
+
+  <div class="row" *ngIf="auth.getRole?.() === 'ADMIN'">
+    <input type="number" [(ngModel)]="agentId" placeholder="Agent ID" />
+    <button (click)="assign()">Assign</button>
+  </div>
+</div>
+
+<div *ngIf="loading">Loading...</div>
+<div *ngIf="error" class="err">{{ error }}</div>
+
+<div *ngIf="selected">
+  <h3>Selected Ticket</h3>
+  <pre>{{ selected | json }}</pre>
+</div>
+
+<table class="tbl" *ngIf="tickets.length">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>User</th>
+      <th>Issue</th>
+      <th>Status</th>
+      <th>Agent</th>
+      <th>Created</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let t of tickets">
+      <td>{{ t.ticketId }}</td>
+      <td>{{ t.userId }}</td>
+      <td>{{ t.issue }}</td>
+      <td>{{ t.status }}</td>
+      <td>{{ t.assignedAgentId }}</td>
+      <td>{{ t.createdAt }}</td>
+    </tr>
+  </tbody>
+</table>
+
+<div *ngIf="!loading && !error && !selected && !tickets.length">
+  <em>No tickets to display.</em>
+</div>
+

@@ -1,0 +1,462 @@
+/* Blue-themed Flight Admin CSS */
+
+/* General Styling */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  color: #1e293b;
+  line-height: 1.6;
+  min-height: 100vh;
+  padding: 2rem 1rem;
+}
+
+/* Headers */
+h2 {
+  color: #1e40af;
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 2rem 0 1.5rem 0;
+  text-align: center;
+  text-shadow: 0 2px 4px rgba(30, 64, 175, 0.1);
+}
+
+h2:first-of-type {
+  margin-top: 1rem;
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+h3 {
+  color: #1e40af;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 2.5rem 0 1rem 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #e0e7ff;
+}
+
+/* Search Section */
+.search-container {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(59, 130, 246, 0.1);
+  margin: 2rem auto;
+  max-width: 600px;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* Input Styling */
+input[type="text"],
+input[type="number"],
+input[type="email"],
+input:not([type="checkbox"]):not([type="submit"]) {
+  border: 2px solid #e0e7ff;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  background: #ffffff;
+  color: #1e293b;
+  min-width: 200px;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="email"]:focus,
+input:not([type="checkbox"]):not([type="submit"]):focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 0.2rem rgba(59, 130, 246, 0.25);
+  outline: none;
+  transform: translateY(-1px);
+}
+
+input::placeholder {
+  color: #94a3b8;
+  font-style: italic;
+}
+
+/* Checkbox Styling */
+input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #3b82f6;
+  cursor: pointer;
+  margin-right: 0.5rem;
+}
+
+/* Button Styling */
+button {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+}
+
+button:hover {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+/* Specific Button Colors */
+button[onclick*="view"],
+button:contains("View") {
+  background: linear-gradient(135deg, #06b6d4, #0891b2);
+}
+
+button[onclick*="view"]:hover,
+button:contains("View"):hover {
+  background: linear-gradient(135deg, #0891b2, #0e7490);
+}
+
+button[onclick*="update"],
+button:contains("Update") {
+  background: linear-gradient(135deg, #10b981, #059669);
+}
+
+button[onclick*="update"]:hover,
+button:contains("Update"):hover {
+  background: linear-gradient(135deg, #059669, #047857);
+}
+
+button[onclick*="remove"],
+button[onclick*="delete"],
+button:contains("Delete") {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+}
+
+button[onclick*="remove"]:hover,
+button[onclick*="delete"]:hover,
+button:contains("Delete"):hover {
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
+}
+
+button[onclick*="reset"],
+button:contains("Reset") {
+  background: linear-gradient(135deg, #64748b, #475569);
+}
+
+button[onclick*="reset"]:hover,
+button:contains("Reset"):hover {
+  background: linear-gradient(135deg, #475569, #334155);
+}
+
+/* Table Styling */
+.tbl {
+  width: 100%;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(59, 130, 246, 0.1);
+  margin: 2rem auto;
+  border-collapse: collapse;
+}
+
+.tbl thead {
+  background: linear-gradient(135deg, #1e40af, #1d4ed8);
+  color: white;
+}
+
+.tbl th {
+  padding: 1.2rem 1rem;
+  font-weight: 600;
+  text-align: left;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.tbl tbody tr {
+  border-bottom: 1px solid #e2e8f0;
+  transition: all 0.3s ease;
+}
+
+.tbl tbody tr:hover {
+  background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+  transform: scale(1.01);
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.1);
+}
+
+.tbl tbody tr:nth-child(even) {
+  background-color: #f8fafc;
+}
+
+.tbl tbody tr:nth-child(even):hover {
+  background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+}
+
+.tbl td {
+  padding: 1rem;
+  vertical-align: middle;
+}
+
+.tbl td input {
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.9rem;
+  width: 100%;
+  min-width: 100px;
+}
+
+.tbl td input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 0.1rem rgba(59, 130, 246, 0.25);
+}
+
+/* Actions Column */
+.actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.actions button {
+  padding: 0.5rem 1rem;
+  font-size: 0.8rem;
+  min-width: auto;
+}
+
+/* Form Styling */
+.form {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(59, 130, 246, 0.1);
+  margin: 2rem auto;
+  max-width: 600px;
+  display: grid;
+  gap: 1.5rem;
+}
+
+.form input {
+  margin-bottom: 0;
+}
+
+.form label {
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+  color: #1e40af;
+  cursor: pointer;
+  padding: 0.5rem 0;
+}
+
+.form button[type="submit"] {
+  background: linear-gradient(135deg, #10b981, #059669);
+  font-size: 1rem;
+  padding: 1rem 2rem;
+  margin-top: 1rem;
+}
+
+.form button[type="submit"]:hover {
+  background: linear-gradient(135deg, #059669, #047857);
+}
+
+/* Error Styling */
+div[style*="color:red"] {
+  background: linear-gradient(135deg, #fef2f2, #fee2e2);
+  color: #dc2626 !important;
+  padding: 1rem;
+  border-radius: 8px;
+  border-left: 4px solid #ef4444;
+  margin: 1rem auto;
+  max-width: 600px;
+  font-weight: 500;
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.1);
+}
+
+/* No Results Message */
+div:contains("No flights found") {
+  background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+  color: #0369a1;
+  padding: 2rem;
+  border-radius: 12px;
+  text-align: center;
+  margin: 2rem auto;
+  max-width: 600px;
+  border: 2px dashed #3b82f6;
+  font-size: 1.1rem;
+}
+
+/* Details Section */
+.details {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(59, 130, 246, 0.1);
+  margin: 2rem auto;
+  max-width: 800px;
+}
+
+.details pre {
+  background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 1.5rem;
+  overflow-x: auto;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #1e293b;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  body {
+    padding: 1rem 0.5rem;
+  }
+  
+  h2 {
+    font-size: 1.5rem;
+  }
+  
+  .search-container,
+  .form {
+    padding: 1.5rem;
+    margin: 1rem;
+  }
+  
+  .tbl {
+    font-size: 0.8rem;
+  }
+  
+  .tbl th,
+  .tbl td {
+    padding: 0.75rem 0.5rem;
+  }
+  
+  .actions {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  
+  .actions button {
+    width: 100%;
+  }
+  
+  input[type="text"],
+  input[type="number"],
+  input:not([type="checkbox"]):not([type="submit"]) {
+    min-width: auto;
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .search-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .search-container input,
+  .search-container button {
+    width: 100%;
+  }
+  
+  .tbl {
+    overflow-x: auto;
+    display: block;
+    white-space: nowrap;
+  }
+  
+  .tbl thead,
+  .tbl tbody,
+  .tbl th,
+  .tbl td,
+  .tbl tr {
+    display: block;
+  }
+  
+  .tbl thead tr {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+  }
+  
+  .tbl tr {
+    border: 1px solid #e2e8f0;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    padding: 1rem;
+    background: white;
+  }
+  
+  .tbl td {
+    border: none;
+    position: relative;
+    padding: 0.5rem 0;
+  }
+  
+  .tbl td:before {
+    content: attr(data-label) ": ";
+    font-weight: bold;
+    color: #1e40af;
+  }
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.tbl,
+.form,
+.details,
+.search-container {
+  animation: fadeIn 0.6s ease-out;
+}
+
+/* Loading States */
+.loading {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 3px solid #e0e7ff;
+  border-radius: 50%;
+  border-top-color: #3b82f6;
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Focus States for Accessibility */
+button:focus,
+input:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}

@@ -1,0 +1,112 @@
+
+<app-payment-navbar></app-payment-navbar>
+<!-- <router-outlet></router-outlet> -->
+
+<div class="container mt-4">
+  <h2>All Payments</h2>
+
+  <!-- Filters Section -->
+  <div class="filters">
+    <input type="number" 
+           placeholder="Filter by User ID" 
+           [(ngModel)]="userIdFilter">
+    <button class="filter-btn" (click)="filterByUserId()">Filter by User</button>
+    
+    <input type="number" 
+           placeholder="Filter by Payment ID" 
+           [(ngModel)]="paymentIdFilter">
+    <button class="filter-btn" (click)="filterByPaymentId()">Filter by Payment</button>
+    
+    <input type="number" 
+           placeholder="Filter by Booking ID" 
+           [(ngModel)]="bookingIdFilter">
+    <button class="filter-btn" (click)="filterByBookingId()">Filter by Booking</button>
+    
+    <button class="reset-btn" (click)="resetFilters()">Reset Filters</button>
+  </div>
+
+  <!-- Loading state -->
+  <div *ngIf="loading" class="loading">Loading payments...</div>
+
+  <!-- Error state -->
+  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+  <!-- Payment Table -->
+  <table class="table table-striped" *ngIf="!loading && payments.length > 0">
+    <thead>
+      <tr>
+        <th>Payment ID</th>
+        <th>User ID</th>
+        <th>Booking ID</th>
+        <th>Amount</th>
+        <th>Status</th>
+        <th>Method</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let payment of payments">
+        <td>{{ payment.paymentId }}</td>
+        <td>{{ payment.userId }}</td>
+        <td>{{ payment.bookingId }}</td>
+        <td>{{ payment.amount | currency:'INR':'symbol' }}</td>
+        <td>{{ payment.status }}</td>
+        <td>{{ payment.paymentMethod }}</td>
+        <td>
+          <button class="btn btn-sm btn-primary me-2"
+                  (click)="openUpdateModal(payment)">
+            Update
+          </button>
+          <button class="btn btn-sm btn-danger"
+                  (click)="deletePayment(payment.paymentId)">
+            Delete
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Empty state -->
+  <div *ngIf="!loading && payments.length === 0 && !error" class="no-data">
+    <p *ngIf="currentFilter === 'all'">No payments found.</p>
+    <p *ngIf="currentFilter === 'user'">No payments found for User ID: {{ userIdFilter }}</p>
+    <p *ngIf="currentFilter === 'payment'">No payment found for Payment ID: {{ paymentIdFilter }}</p>
+    <p *ngIf="currentFilter === 'booking'">No payments found for Booking ID: {{ bookingIdFilter }}</p>
+  </div>
+</div>
+
+<!-- Update Payment Modal -->
+<div class="modal fade" id="updatePaymentModal" tabindex="-1" aria-labelledby="updatePaymentModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="updatePaymentModalLabel">Update Payment</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="mb-3">
+            <label>Status</label>
+            <select class="form-select" [(ngModel)]="updateStatus" name="status">
+              <option value="PENDING">PENDING</option>
+              <option value="SUCCESS">SUCCESS</option>
+              <option value="FAILED">FAILED</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label>Payment Method</label>
+            <select class="form-select" [(ngModel)]="updateMethod" name="method">
+              <option value="CARD">CARD</option>
+              <option value="UPI">UPI</option>
+              <option value="NETBANKING">NETBANKING</option>
+            </select>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" (click)="confirmUpdate()">Save Changes</button>
+      </div>
+    </div>
+  </div>
+</div>

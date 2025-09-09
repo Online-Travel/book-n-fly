@@ -11,11 +11,13 @@ public interface HotelService {
 
     Optional<Hotel> getHotelById(Long hotelId);
 
+    List<Hotel> getHotelsByUserId(Long userId);
+
     Hotel addHotel(Hotel hotel);
 
-    Hotel updateHotel(Long hotelId, Hotel hotel);
+    Hotel updateHotel(Long userId, Long hotelId, Hotel hotel);
 
     void deleteHotel(Long hotelId);
 
-    List<Hotel> searchHotels(String location, Double minRating, Double maxPrice, Integer minRooms);
+    List<Hotel> searchHotels(String location, Double minRating, Double maxRating, Double minPrice, Double maxPrice, Integer minRooms, Integer maxRooms);
 }
