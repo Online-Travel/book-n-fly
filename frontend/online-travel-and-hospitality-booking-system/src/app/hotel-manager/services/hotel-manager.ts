@@ -13,17 +13,29 @@ export class HotelManager {
   constructor(private http: HttpClient, private authService: AuthService) { }
 
   private getAuthHeaders(): HttpHeaders {
-    const token = this.authService.getToken(); // Implement in AuthService
-    let headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    if (token) {
-      headers = headers.set('Authorization', `Bearer ${token}`);
-    }
-    return headers;
+    const token = this.authService.getToken();
+    return new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
   }
 
   getMyHotels(): Observable<Hotel[]> {
     const headers = this.getAuthHeaders();
-    return this.http.get<Hotel[]>(`${this.baseUrl}/my-hotels`, { headers });
+    // return this.http.get<Hotel[]>(`${this.baseUrl}/my-hotels`, { headers });
+    let hotels = this.http.get<Hotel[]>(`${this.baseUrl}/my-hotels`, { headers });
+    console.log(hotels);
+    return hotels;
   }
-  
+
+  createHotel(hotel: Hotel): Observable<Hotel> {
+    const headers = this.getAuthHeaders();
+    console.log(headers);
+    return this.http.post<Hotel>(`${this.baseUrl}`, hotel, { headers });
+  }
+
+  updateHotel(hotelId: number, hotel: Hotel): Observable<Hotel> {
+    const headers = this.getAuthHeaders();
+    return this.http.put<Hotel>(`${this.baseUrl}/${hotelId}`, hotel, { headers });
+  }
 }
