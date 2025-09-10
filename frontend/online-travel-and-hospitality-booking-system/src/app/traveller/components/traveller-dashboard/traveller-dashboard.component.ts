@@ -7,13 +7,14 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { PaymentService } from '../../services/payment.service';
+import { RouterModule } from '@angular/router';
 declare var Razorpay: any;
 
 @Component({
   selector: 'app-traveller-dashboard',
-  imports: [FormsModule,CommonModule],
+  imports: [FormsModule,CommonModule,RouterModule],
   templateUrl: './traveller-dashboard.component.html',
-  styleUrl: './traveller-dashboard.component.css'
+  styleUrls: ['./traveller-dashboard.component.css']
 })
 export class TravellerDashboardComponent implements OnInit {
   activeTab: string = 'hotels';
@@ -397,18 +398,18 @@ export class TravellerDashboardComponent implements OnInit {
   // Navigation methods for user profile dropdown
 navigateToProfile(event: Event): void {
   event.preventDefault();
-  this.router.navigate(['/userProfile']);
+  this.router.navigate(['/traveller/profile']);
 }
 
 navigateToSupport(event: Event): void {
   event.preventDefault();
-  this.router.navigate(['/customer-support']);
+  this.router.navigate(['/traveller/customer-support']);
 }
 
 
 bookItem(item: any): void {
     if (this.activeTab === 'hotels') {
-      this.router.navigate(['/hotel', item.hotelId]);
+      this.router.navigate(['/traveller/hotel', item.hotelId]);
     } else if (this.activeTab === 'packages') {
       // Show itinerary form for packages
       this.selectedPackage = item;

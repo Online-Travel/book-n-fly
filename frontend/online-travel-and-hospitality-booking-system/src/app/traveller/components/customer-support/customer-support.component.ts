@@ -35,7 +35,7 @@ export class CustomerSupportComponent implements OnInit {
   }
 
   navigateToDashboard(): void {
-    this.router.navigate(['/user-dashboard']);
+    this.router.navigate(['/traveller']);
   }
 
   loadMyTickets(): void {

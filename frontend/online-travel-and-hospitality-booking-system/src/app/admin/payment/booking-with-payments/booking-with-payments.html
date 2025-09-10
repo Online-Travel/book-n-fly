@@ -1,5 +1,5 @@
 <app-payment-navbar></app-payment-navbar>
-<!-- <router-outlet></router-outlet> -->
+<router-outlet></router-outlet>
 
 <div *ngIf="allBookingsWithPayments.length > 0; else noData">
   <div *ngFor="let bp of allBookingsWithPayments" class="booking-card">

@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { AuthService } from '../../../auth/auth.service';
 
 @Injectable({ providedIn: 'root' })
 export class PackageService {
   private apiUrl = 'http://localhost:8080/api/packages';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient,private authService:AuthService) {}
 
   addPackage(pkg: any) {
     return this.http.post(this.apiUrl, pkg, this.authHeader());
@@ -47,7 +48,7 @@ export class PackageService {
   }
 
   private authHeader() {
-    const token = localStorage.getItem('token');
+    const token = this.authService.getToken();
     return {
       headers: new HttpHeaders({
         Authorization: `Bearer ${token}`

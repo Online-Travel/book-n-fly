@@ -21,7 +21,6 @@ import OnlineTravelBooking.package_service.model.TravelPackage;
 import OnlineTravelBooking.package_service.service.TravelPackageService;
 import OnlineTravelBooking.package_service.utils.JwtUtil;
 
-@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/api/packages")
 public class TravelPackageController {

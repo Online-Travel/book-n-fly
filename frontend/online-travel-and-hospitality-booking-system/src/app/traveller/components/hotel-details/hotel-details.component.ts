@@ -191,7 +191,7 @@ export class HotelDetailsComponent implements OnInit {
   }
 
   goBack(): void {
-    this.router.navigate(['/traveller-dashboard']);
+    this.router.navigate(['/traveller']);
   }
 
   formatDate(dateString: string): string {

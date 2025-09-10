@@ -15,23 +15,23 @@ export class NavbarComponent {
    constructor(public authService: AuthService, private router: Router) {}
 
   goToPayment() {
-    this.router.navigate(['/payment']);
+    this.router.navigate(['admin/payment']);
   }
 
   goToUser(){
-    this.router.navigate(['/user']);
+    this.router.navigate(['admin/user']);
   }
 
   goToPackage(){
-    this.router.navigate(['/package']);
+    this.router.navigate(['admin/package']);
   }
 
   goToBooking() {
-    this.router.navigate(['/bookings']);
+    this.router.navigate(['admin/bookings']);
   }
 
    goToReview() {
-    this.router.navigate(['/review']);
+    this.router.navigate(['admin/review']);
   }
 
   logout() {

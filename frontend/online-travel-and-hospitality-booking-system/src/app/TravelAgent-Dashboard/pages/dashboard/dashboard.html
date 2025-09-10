@@ -22,19 +22,19 @@
     <!-- Navigation -->
     <ul class="nav flex-column gap-2 flex-grow-1">
       <li class="nav-item">
-        <a href="/dashboard/packages" routerLinkActive="active" class="nav-link text-white d-flex align-items-center">
+        <a routerLink="/dashboard/packages" routerLinkActive="active" class="nav-link text-white d-flex align-items-center">
           <i class="bi bi-box-seam me-2"></i>
           <span *ngIf="sidebarOpen">Packages</span>
         </a>
       </li>
       <li class="nav-item">
-        <a href="/dashboard/itineraries" routerLinkActive="active" class="nav-link text-white d-flex align-items-center">
+        <a routerLink="itineraries" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" class="nav-link text-white d-flex align-items-center">
           <i class="bi bi-map me-2"></i>
           <span *ngIf="sidebarOpen">Itineraries</span>
         </a>
       </li>
       <li class="nav-item">
-        <a href="/dashboard/supportticket" routerLinkActive="active" class="nav-link text-white d-flex align-items-center">
+        <a routerLink="supportticket" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" class="nav-link text-white d-flex align-items-center">
           <i class="bi bi-life-preserver me-2"></i>
           <span *ngIf="sidebarOpen">Support Ticket</span>
         </a>
@@ -52,5 +52,5 @@
   <div class="main flex-grow-1 p-4">
     <router-outlet></router-outlet>
   </div>
-
+  
 </div>

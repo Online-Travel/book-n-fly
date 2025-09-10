@@ -34,12 +34,14 @@ import { travelerGuard } from './guard/traveler/traveler-guard';
 import { agentGuard } from './guard/agent/agent-guard';
 import { hotelManagerGuard } from './guard/hotel-manager/hotel-manager-guard';
 import { HotelManagerDashboard } from './hotel-manager/pages/hotel-manager-dashboard/hotel-manager-dashboard';
+import { SignupComponent } from './pages/auth/signup/signup.component/signup.component';
 
 export const routes: Routes = [
   { path: '', component: LandingPage },
   { path: 'landing', component: LandingPage },
   { path: 'home', component: LandingPage },
   { path: 'login', component: LoginComponent },
+  {path:'signup',component:SignupComponent},
 
   // Admin routes
   {
@@ -63,17 +65,22 @@ export const routes: Routes = [
   },
 
   // Traveller routes with children
-  {
-    path: 'traveller',
-    component: TravellerDashboardComponent,
-    canActivate: [travelerGuard],
-    children: [
-      { path: '', redirectTo: 'profile', pathMatch: 'full' },
-      { path: 'profile', component: UserProfileComponent },
-      { path: 'hotel/:id', component: HotelDetailsComponent },
-      { path: 'customer-support', component: CustomerSupportComponent },
-    ]
-  },
+  // {
+  //   path: 'traveller',
+  //   component: TravellerDashboardComponent,
+  //   canActivate: [travelerGuard],
+  //   children: [
+  //     // { path: '', redirectTo: 'profile', pathMatch: 'full' },
+  //     { path: 'profile', component: UserProfileComponent },
+  //     { path: 'hotel/:id', component: HotelDetailsComponent },
+  //     { path: 'customer-support', component: CustomerSupportComponent },
+  //   ]
+  // },
+{ path: 'traveller', component: TravellerDashboardComponent, canActivate: [travelerGuard] },
+{ path: 'traveller/profile', component: UserProfileComponent, canActivate: [travelerGuard] },
+{ path: 'traveller/customer-support', component: CustomerSupportComponent, canActivate: [travelerGuard] },
+{ path: 'traveller/hotel/:id', component: HotelDetailsComponent, canActivate: [travelerGuard] },
+{ path: 'traveller/**', redirectTo: 'traveller' },
 
   // Travel Agent
   {
@@ -91,7 +98,7 @@ export const routes: Routes = [
   // Hotel-Manager
   {
     path: 'hotel-manager',
-    // component: TravelAgentDashboardComponent,
+    component: TravelAgentDashboardComponent,
     canActivate: [hotelManagerGuard],
     children: [
       // { path: '', redirectTo: 'hotedashboard', pathMatch: 'full' },

@@ -2,85 +2,64 @@ import { Component, OnInit } from '@angular/core';
 import { HotelManagerNavbar } from "../../components/hotel-manager-navbar/hotel-manager-navbar";
 import { Hotel } from '../../../admin/models/booking.model';
 import { HotelManager } from '../../services/hotel-manager';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-hotel-manager-dashboard',
-  imports: [HotelManagerNavbar, FormsModule],
+  standalone:true,
+  imports: [CommonModule,HotelManagerNavbar,ReactiveFormsModule,FormsModule],
   templateUrl: './hotel-manager-dashboard.html',
-  styleUrl: './hotel-manager-dashboard.css'
+  styleUrls: ['./hotel-manager-dashboard.css']
 })
 export class HotelManagerDashboard implements OnInit {
-  hotels: Hotel[] = [];
-  currentHotel: Hotel = this.getEmptyHotel();
-  isEditMode = false;
 
-  constructor(private hotelManager: HotelManager) { }
+  hotels: Hotel[] = [];
+  newHotel: Hotel = { name: '', location: '', roomsAvailable: 0, rating: 0, pricePerNight: 0 };
+  editingHotel: Hotel | null = null;
+
+  constructor(private hotelService: HotelManager) { }
 
   ngOnInit(): void {
     this.loadHotels();
   }
 
   loadHotels(): void {
-    this.hotelManager.getMyHotels().subscribe(
-      (data: Hotel[]) => {
-        this.hotels = data;
-        console.log('Hotels loaded:', this.hotels);
+    this.hotelService.getMyHotels().subscribe({
+      next: (data) => this.hotels = data,
+      error: (err) => console.error(err)
+    });
+  }
+
+  addHotel(): void {
+    this.hotelService.createHotel(this.newHotel).subscribe({
+      next: (hotel) => {
+        this.hotels.push(hotel);
+        this.newHotel = { name: '', location: '', roomsAvailable: 0, rating: 0, pricePerNight: 0 };
       },
-      (error) => {
-        console.error('Error loading hotels:', error);
-        // Handle error appropriately (show message to user)
-        console.error('Error loading hotels:', error);
-        alert('Error loading hotels');
-      }
-    );
+      error: (err) => console.error(err)
+    });
   }
 
   editHotel(hotel: Hotel): void {
-    this.currentHotel = { ...hotel };
-    this.isEditMode = true;
+    this.editingHotel = { ...hotel };
   }
 
-  createNewHotel(): void {
-    this.currentHotel = this.getEmptyHotel();
-    this.isEditMode = false;
-  }
-
-  onSubmit(): void {
-    if (this.isEditMode) {
-      this.hotelManager.updateHotel(this.currentHotel.hotelId!, this.currentHotel).subscribe(
-        (updatedHotel: Hotel) => {
-          this.loadHotels(); // Reload to show updated data
-          alert('Hotel updated successfully!');
+  updateHotel(): void {
+    if (this.editingHotel && this.editingHotel.hotelId) {
+      this.hotelService.updateHotel(this.editingHotel.hotelId, this.editingHotel).subscribe({
+        next: (updated) => {
+          const index = this.hotels.findIndex(h => h.hotelId === updated.hotelId);
+          if (index !== -1) this.hotels[index] = updated;
+          this.editingHotel = null;
         },
-        (error) => {
-          console.error('Error updating hotel:', error);
-          alert('Error updating hotel');
-        }
-      );
-    } else {
-      console.log('Creating new hotel with data:', this.currentHotel);
-      this.hotelManager.createHotel(this.currentHotel).subscribe(
-        (newHotel) => {
-          this.loadHotels(); // Reload to show new hotel
-          alert('Hotel created successfully!');
-        },
-        (error) => {
-          console.error('Error creating hotel:', error);
-          alert('Error creating hotel');
-        }
-      );
+        error: (err) => console.error(err)
+      });
     }
   }
 
-  private getEmptyHotel(): Hotel {
-    return {
-      hotelId: 0,
-      name: '',
-      location: '',
-      roomsAvailable: 0,
-      rating: 0,
-      pricePerNight: 0,
-    };
+  cancelEdit(): void {
+    this.editingHotel = null;
   }
 }

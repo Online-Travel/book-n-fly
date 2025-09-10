@@ -24,7 +24,7 @@ export class LoginComponent {
       if (res.role === 'TRAVELER') {
         this.auth.saveToken(res.token);
         this.auth.saveUserEmail(this.credentials.email);
-        this.router.navigate(['/traveller-dashboard']);
+        this.router.navigate(['/traveller/board']);
       } else {
         this.error = 'Access denied. Only Travel Agents allowed.';
       }

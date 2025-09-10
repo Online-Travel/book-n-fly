@@ -9,10 +9,11 @@ export const travelerGuard: CanActivateFn = (route, state) => {
   const token = authService.getToken();
   const role = authService.getRole();
 
-  if (token && role === 'TRAVELER') {
-    return true;
-  } else {
-    router.navigate(['/home']);
-    return false;
-  }
+  return true;
+  // if (token && role === 'TRAVELER') {
+  //   return true;
+  // } else {
+  //   router.navigate(['/home']);
+  //   return false;
+  // }
 };

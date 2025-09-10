@@ -49,7 +49,17 @@ export class LoginComponent {
           this.loading = false;
           console.log('Login successful', response);
           if(response.role==='ADMIN'){
-            this.router.navigate(['/user'])
+            this.router.navigate(['/admin/user'])
+          }
+          else if(response.role==='TRAVELER'){
+            console.log("traveler")
+            this.router.navigate(['/traveller'])
+          }
+          else if(response.role==='TRAVEL_AGENT'){
+            this.router.navigate(['/agent/packages'])
+          }
+          else if(response.role==='HOTEL_MANAGER'){
+            this.router.navigate(['/hotel-manager'])
           }
           else{
           this.router.navigate(['/login']);
