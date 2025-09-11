@@ -29,7 +29,7 @@ export class SignupComponent {
     this.authService.signup(this.user).subscribe({
       next: (res) => {
         this.message = 'User registered successfully!';
-        this.user = { name: '', email: '', password: '', role: 'USER', contactNumber: 0 };
+        this.user = { name: '', email: '', password: '', role: 'Traveler', contactNumber: 0 };
         this.router.navigate(['/login']);
         
       },
